@@ -1,0 +1,6 @@
+framework module react_native_shake {
+  umbrella header "react-native-shake-umbrella.h"
+
+  export *
+  module * { export * }
+}

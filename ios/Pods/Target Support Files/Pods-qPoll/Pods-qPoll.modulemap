@@ -1,0 +1,6 @@
+framework module Pods_qPoll {
+  umbrella header "Pods-qPoll-umbrella.h"
+
+  export *
+  module * { export * }
+}
