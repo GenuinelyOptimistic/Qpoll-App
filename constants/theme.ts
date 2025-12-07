@@ -27,6 +27,46 @@ export const Colors = {
   },
 };
 
+export const Spacing = {
+  small: 8,
+  medium: 16,
+  large: 24,
+  extraLarge: 32,
+};
+
+export const Content = {
+  flex: 1,
+  justifyContent: 'center' as const,
+  paddingHorizontal: 20,
+  paddingVertical: 16,
+  gap: 16,
+}
+
+export const Typography = {
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold' as const,
+    lineHeight: 40,
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 20,
+    fontWeight: '600' as const,
+    lineHeight: 28,
+    marginBottom: 8,
+  },
+  body: {
+    fontSize: 16,
+    lineHeight: 24,
+    marginBottom: 8,
+  },
+  caption: {
+    fontSize: 14,
+    lineHeight: 20,
+    opacity: 0.7,
+  },
+}
+
 export const Fonts = Platform.select({
   ios: {
     /** iOS `UIFontDescriptorSystemDesignDefault` */
