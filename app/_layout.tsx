@@ -21,6 +21,9 @@ export default function RootLayout() {
           <Stack.Screen name="poll" options={{ headerShown: false }} />
           <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
           <Stack.Screen name="login" options={{ headerShown: false }} />
+          <Stack.Screen name="terms" options={{ headerShown: false }} />
+          <Stack.Screen name="privacy" options={{ headerShown: false }} />
+          <Stack.Screen name="username" options={{ headerShown: false }} />
         </Stack>
         <StatusBar style="auto" />
       </CategoryProvider>

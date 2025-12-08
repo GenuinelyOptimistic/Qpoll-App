@@ -28,19 +28,12 @@ export const Colors = {
 };
 
 export const Spacing = {
+  xSmall: 4,
   small: 8,
   medium: 16,
   large: 24,
   extraLarge: 32,
 };
-
-export const Content = {
-  flex: 1,
-  justifyContent: 'center' as const,
-  paddingHorizontal: 20,
-  paddingVertical: 16,
-  gap: 16,
-}
 
 export const Typography = {
   title: {
