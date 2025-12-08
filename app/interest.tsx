@@ -33,6 +33,9 @@ export default function InterestScreen() {
   
   return (
     <ThemedView style={Content}>
+      <ThemedView style={styles.titleContainer}>
+        <ThemedText style={styles.title}>Categories!</ThemedText>
+      </ThemedView>
       <ThemedView style={styles.stepContainer}>
         <ThemedText style={styles.description}>
           Select what types of polls you are interested in below
@@ -57,6 +60,18 @@ export default function InterestScreen() {
             })}
           </View>
         </ScrollView>
+
+        {selectedInterests.length > 0 && (
+          <TouchableOpacity
+            style={styles.continueButton}
+            onPress={() => router.push('/poll')}
+            activeOpacity={0.8}
+          >
+            <ThemedText style={styles.continueButtonText}>
+              Start Polling
+            </ThemedText>
+          </TouchableOpacity>
+        )}
       </ThemedView>
     </ThemedView>
   );
@@ -125,5 +140,26 @@ const styles = StyleSheet.create({
   categoryText: {
     fontSize: 16,
     fontWeight: '500',
+  },
+  continueButton: {
+    backgroundColor: '#007AFF',
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    borderRadius: 25,
+    alignItems: 'center',
+    marginTop: 20,
+    shadowColor: '#007AFF',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  continueButtonText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#ffffff',
   },
 });

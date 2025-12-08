@@ -37,6 +37,9 @@ export default function LoginScreen() {
       <Stack.Screen options={{ headerShown: false }} />
 
       <ThemedView style={styles.content}>
+        <ThemedText type="title" style={styles.title}>
+          Welcome to Qpoll
+        </ThemedText>
         <ThemedText type="subtitle" style={Typography.subtitle}>
           Quickly crowd source information to make more informed decisions
         </ThemedText>
