@@ -1,4 +1,4 @@
-import { Category } from '@/constants/categories';
+import { Category } from '../constants/categories';
 
 export interface PollOption {
   id: string;

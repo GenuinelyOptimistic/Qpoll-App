@@ -1,165 +1,190 @@
-import { StyleSheet, TouchableOpacity, View, ScrollView } from 'react-native';
+import React from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
-
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Content } from '@/constants/theme';
-
-const categories = [
-  { id: '1', name: 'Technology' },
-  { id: '2', name: 'Sports' },
-  { id: '3', name: 'Entertainment' },
-  { id: '4', name: 'Politics' },
-  { id: '5', name: 'Science' },
-  { id: '6', name: 'Health' },
-  { id: '7', name: 'Education' },
-  { id: '8', name: 'Business' },
-  { id: '9', name: 'Travel' },
-  { id: '10', name: 'Food' },
-];
+import * as Haptics from 'expo-haptics';
+import { CATEGORIES, Category } from './constants/categories';
+import { useCategories } from './contexts/CategoryContext';
 
 export default function InterestScreen() {
+  const { selectedCategories, toggleCategory, isLoaded } = useCategories();
   const router = useRouter();
-  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
-  
-  const toggleInterest = (categoryId: string) => {
-    setSelectedInterests(prev => 
-      prev.includes(categoryId)
-        ? prev.filter(id => id !== categoryId)
-        : [...prev, categoryId]
-    );
+
+  const handleToggleCategory = (category: Category) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    toggleCategory(category);
   };
-  
+
+  const handleSubmit = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    router.push('/poll');
+  };
+
+  if (!isLoaded) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <Text style={styles.loadingText}>Loading...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
-    <ThemedView style={Content}>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText style={styles.title}>Categories!</ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText style={styles.description}>
-          Select what types of polls you are interested in below
-        </ThemedText>
-        <ScrollView style={styles.categoriesContainer}>
-          <View style={styles.categories}>
-            {categories.map((category) => {
-              const isSelected = selectedInterests.includes(category.id);
+    <View style={styles.container}>
+      <SafeAreaView edges={['top', 'bottom']} style={styles.safeArea}>
+        <ScrollView 
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.header}>
+            <Text style={styles.title}>CATEGORY</Text>
+            <Text style={styles.subtitle}>
+              What type of polls are you interested in{'\n'}participating in?
+            </Text>
+          </View>
+
+          <View style={styles.categoriesContainer}>
+            {CATEGORIES.map((category) => {
+              const isSelected = selectedCategories.includes(category);
               return (
                 <TouchableOpacity
-                  key={category.id}
-                  style={styles.categoryItem}
-                  onPress={() => toggleInterest(category.id)}
+                  key={category}
+                  style={[
+                    styles.categoryButton,
+                    isSelected && styles.categoryButtonSelected,
+                  ]}
+                  onPress={() => handleToggleCategory(category)}
                   activeOpacity={0.7}
                 >
-                  <View style={[styles.checkbox, isSelected && styles.checkboxSelected]}>
-                    {isSelected && <View style={styles.checkmark} />}
-                  </View>
-                  <ThemedText style={styles.categoryText}>{category.name}</ThemedText>
+                  <Text
+                    style={[
+                      styles.categoryText,
+                      isSelected && styles.categoryTextSelected,
+                    ]}
+                  >
+                    #{category}
+                  </Text>
                 </TouchableOpacity>
               );
             })}
           </View>
         </ScrollView>
 
-        {selectedInterests.length > 0 && (
+        <View style={styles.submitContainer}>
           <TouchableOpacity
-            style={styles.continueButton}
-            onPress={() => router.push('/poll')}
+            style={styles.submitButton}
+            onPress={handleSubmit}
             activeOpacity={0.8}
           >
-            <ThemedText style={styles.continueButtonText}>
-              Start Polling
-            </ThemedText>
+            <Text style={styles.submitButtonText}>Submit</Text>
           </TouchableOpacity>
-        )}
-      </ThemedView>
-    </ThemedView>
+        </View>
+      </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+  },
+  safeArea: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingHorizontal: 24,
+    paddingBottom: 120,
+  },
+  loadingContainer: {
+    flex: 1,
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'center',
+  },
+  loadingText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#999',
+  },
+  header: {
+    alignItems: 'center',
+    marginTop: 60,
+    marginBottom: 60,
   },
   title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    lineHeight: 40,
-    marginBottom: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-    flex: 1,
-  },
-  description: {
-    fontSize: 16,
+    fontSize: 26,
+    fontWeight: '800',
+    color: '#1a1a1a',
+    letterSpacing: 1,
     marginBottom: 16,
   },
-  categoriesContainer: {
-    flex: 1,
+  subtitle: {
+    fontSize: 15,
+    fontWeight: '400',
+    color: '#999',
+    textAlign: 'center',
+    lineHeight: 22,
   },
-  categories: {
+  categoriesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 12,
-    paddingBottom: 20,
-  },
-  categoryItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    backgroundColor: '#f0f0f0',
-    minWidth: '45%',
-    gap: 10,
-  },
-  checkbox: {
-    width: 24,
-    height: 24,
-    borderRadius: 6,
-    borderWidth: 2,
-    borderColor: '#666',
-    backgroundColor: '#fff',
     justifyContent: 'center',
-    alignItems: 'center',
+    gap: 12,
   },
-  checkboxSelected: {
-    backgroundColor: '#007AFF',
-    borderColor: '#007AFF',
+  categoryButton: {
+    paddingHorizontal: 28,
+    paddingVertical: 14,
+    borderRadius: 25,
+    borderWidth: 2,
+    borderColor: '#5B93FF',
+    backgroundColor: '#ffffff',
   },
-  checkmark: {
-    width: 12,
-    height: 12,
-    borderRadius: 2,
-    backgroundColor: '#fff',
+  categoryButtonSelected: {
+    backgroundColor: '#5B93FF',
+    borderColor: '#5B93FF',
   },
   categoryText: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '600',
+    color: '#5B93FF',
   },
-  continueButton: {
-    backgroundColor: '#007AFF',
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    borderRadius: 25,
+  categoryTextSelected: {
+    color: '#ffffff',
+  },
+  submitContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 24,
+    paddingBottom: 40,
+    backgroundColor: 'transparent',
+  },
+  submitButton: {
+    backgroundColor: '#5B93FF',
+    paddingVertical: 20,
+    borderRadius: 30,
     alignItems: 'center',
-    marginTop: 20,
-    shadowColor: '#007AFF',
+    shadowColor: '#5B93FF',
     shadowOffset: {
       width: 0,
-      height: 4,
+      height: 12,
     },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowOpacity: 0.4,
+    shadowRadius: 20,
+    elevation: 10,
   },
-  continueButtonText: {
-    fontSize: 18,
+  submitButtonText: {
+    fontSize: 20,
     fontWeight: '600',
     color: '#ffffff',
+    letterSpacing: 0.5,
   },
 });

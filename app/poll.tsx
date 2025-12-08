@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,20 +9,33 @@ import {
   TouchableOpacity,
   Alert,
   Share,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Heart, Flag, Pencil, Share2, Menu, ArrowLeft } from 'lucide-react-native';
+import { Heart, MoreVertical, ArrowLeft, Check, Clock, Plus } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
-import { mockPolls, Poll } from './mocks/polls';
+import { mockPolls, Poll, PollOption } from './mocks/polls';
+import { useCategories } from './contexts/CategoryContext';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.25;
 
 export default function PollScreen() {
+  const router = useRouter();
+  const { selectedCategories, isLoaded } = useCategories();
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [polls, setPolls] = useState<Poll[]>(mockPolls);
+  const [allPolls, setAllPolls] = useState<Poll[]>(mockPolls);
+  const [menuVisible, setMenuVisible] = useState<boolean>(false);
   const position = useRef(new Animated.ValueXY()).current;
   const rotateValue = useRef(new Animated.Value(0)).current;
+
+  const polls = useMemo(() => {
+    if (selectedCategories.length === 0) {
+      return allPolls;
+    }
+    return allPolls.filter((poll) => selectedCategories.includes(poll.category));
+  }, [allPolls, selectedCategories]);
 
   const currentPoll = polls[currentIndex];
 
@@ -91,12 +104,13 @@ export default function PollScreen() {
     if (!currentPoll) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     
-    const updatedPolls = [...polls];
-    updatedPolls[currentIndex] = {
-      ...updatedPolls[currentIndex],
-      liked: !updatedPolls[currentIndex].liked,
-    };
-    setPolls(updatedPolls);
+    const updatedPolls = allPolls.map((poll) => {
+      if (poll.id === currentPoll.id) {
+        return { ...poll, liked: !poll.liked };
+      }
+      return poll;
+    });
+    setAllPolls(updatedPolls);
     
     console.log(`Poll ${currentPoll.id} liked:`, !currentPoll.liked);
   };
@@ -104,6 +118,7 @@ export default function PollScreen() {
   const handleFlag = () => {
     if (!currentPoll) return;
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    setMenuVisible(false);
     
     Alert.alert(
       'Flag Poll',
@@ -124,6 +139,7 @@ export default function PollScreen() {
 
   const handleEdit = () => {
     if (!currentPoll) return;
+    setMenuVisible(false);
     
     if (!currentPoll.isOwner) {
       Alert.alert('Cannot Edit', 'You can only edit polls you created.');
@@ -142,6 +158,7 @@ export default function PollScreen() {
 
   const handleShare = async () => {
     if (!currentPoll) return;
+    setMenuVisible(false);
     
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     
@@ -159,18 +176,61 @@ export default function PollScreen() {
     }
   };
 
-  const handleRespond = () => {
+  const handleVote = (optionId: string) => {
     if (!currentPoll) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    Alert.alert('Respond', 'Poll response screen would open here.');
-    console.log(`Responding to poll ${currentPoll.id}`);
+    
+    const updatedPolls = allPolls.map((poll) => {
+      if (poll.id === currentPoll.id) {
+        const updatedOptions = poll.options.map((opt) => {
+          if (opt.id === optionId) {
+            return { ...opt, votes: opt.votes + 1 };
+          }
+          return opt;
+        });
+        return { ...poll, userVoted: true, votes: poll.votes + 1, options: updatedOptions };
+      }
+      return poll;
+    });
+    
+    setAllPolls(updatedPolls);
+    console.log(`Voted for option ${optionId} in poll ${currentPoll.id}`);
   };
+
+  const handleBack = () => {
+    router.back();
+  };
+
+  const handleCreatePoll = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    router.push('/create-poll');
+    console.log('Creating new poll');
+  };
+
+  const toggleMenu = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setMenuVisible(!menuVisible);
+  };
+
+  if (!isLoaded) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>Loading...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   if (!currentPoll) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>No more polls!</Text>
+          <Text style={styles.emptyText}>
+            {selectedCategories.length > 0
+              ? 'No polls in selected categories'
+              : 'No more polls!'}
+          </Text>
         </View>
       </SafeAreaView>
     );
@@ -205,19 +265,21 @@ export default function PollScreen() {
 
   const nextCard = polls[currentIndex + 1];
 
+  const getSortedOptions = (poll: Poll) => {
+    return [...poll.options].sort((a, b) => b.votes - a.votes);
+  };
+
   return (
     <View style={styles.container}>
       <SafeAreaView edges={['top']} style={styles.header}>
-        <TouchableOpacity style={styles.headerButton}>
+        <TouchableOpacity style={styles.headerButton} onPress={handleBack}>
           <ArrowLeft size={24} color="#1a1a1a" />
         </TouchableOpacity>
         <View style={styles.pointsContainer}>
           <Text style={styles.pointsNumber}>5</Text>
           <Text style={styles.pointsLabel}>points</Text>
         </View>
-        <TouchableOpacity style={styles.headerButton}>
-          <Menu size={24} color="#1a1a1a" />
-        </TouchableOpacity>
+        <View style={styles.headerButton} />
       </SafeAreaView>
 
       <View style={styles.cardContainer}>
@@ -240,39 +302,53 @@ export default function PollScreen() {
           {...panResponder.panHandlers}
         >
           <View style={styles.cardContent}>
-            <Text style={styles.questionText}>{currentPoll.question}</Text>
-            
-            <TouchableOpacity
-              style={styles.respondButton}
-              onPress={handleRespond}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.respondButtonText}>Respond</Text>
-            </TouchableOpacity>
-            
-            <Text style={styles.voteInfo}>
-              {currentPoll.votes} votes · {currentPoll.timeLeft}
-            </Text>
+            <View style={styles.pollHeader}>
+              <View style={styles.pollHeaderTop}>
+                <View style={styles.pollHeaderLeft}>
+                  <Text style={styles.questionText}>{currentPoll.question}</Text>
+                </View>
+                <TouchableOpacity
+                  style={styles.menuButton}
+                  onPress={toggleMenu}
+                  activeOpacity={0.7}
+                >
+                  <MoreVertical size={20} color="#666" />
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.pollMeta}>
+                {currentPoll.votes} votes · Vote to see results
+              </Text>
+            </View>
+
+            <View style={styles.optionsContainer}>
+              {getSortedOptions(currentPoll).map((option, index) => (
+                <PollOptionCard
+                  key={option.id}
+                  option={option}
+                  totalVotes={currentPoll.votes}
+                  rank={index}
+                  showResults={currentPoll.userVoted}
+                  onVote={() => handleVote(option.id)}
+                  votingType={currentPoll.votingType}
+                />
+              ))}
+            </View>
+
+            <View style={styles.pollFooter}>
+              <View style={styles.footerItem}>
+                <Clock size={14} color="#999" />
+                <Text style={styles.footerText}>{currentPoll.timeLeft}</Text>
+              </View>
+              <View style={styles.footerItem}>
+                <Text style={styles.footerText}>{currentPoll.votingType}</Text>
+              </View>
+            </View>
           </View>
         </Animated.View>
       </View>
 
       <SafeAreaView edges={['bottom']} style={styles.actionsContainer}>
         <View style={styles.actions}>
-          <TouchableOpacity
-            style={[
-              styles.actionButton,
-              currentPoll.isOwner && !currentPoll.hasResponses && styles.actionButtonActive,
-            ]}
-            onPress={handleEdit}
-            activeOpacity={0.7}
-          >
-            <Pencil
-              size={24}
-              color={currentPoll.isOwner && !currentPoll.hasResponses ? '#5B93FF' : '#666'}
-            />
-          </TouchableOpacity>
-
           <TouchableOpacity
             style={[styles.actionButton, styles.heartButton]}
             onPress={handleLike}
@@ -286,25 +362,129 @@ export default function PollScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.actionButton}
-            onPress={handleShare}
+            style={[styles.actionButton, styles.createButton]}
+            onPress={handleCreatePoll}
             activeOpacity={0.7}
           >
-            <Share2 size={24} color="#666" />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.actionButton}
-            onPress={handleFlag}
-            activeOpacity={0.7}
-          >
-            <Flag size={24} color="#666" />
+            <Plus size={32} color="#ffffff" strokeWidth={2.5} />
           </TouchableOpacity>
         </View>
       </SafeAreaView>
+
+      {menuVisible && (
+        <TouchableOpacity
+          style={styles.menuOverlay}
+          activeOpacity={1}
+          onPress={() => setMenuVisible(false)}
+        >
+          <View style={styles.menuContainer}>
+            {currentPoll.isOwner && !currentPoll.hasResponses && (
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={handleEdit}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.menuItemText}>Edit Poll</Text>
+              </TouchableOpacity>
+            )}
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={handleShare}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.menuItemText}>Share Poll</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.menuItem, styles.menuItemLast]}
+              onPress={handleFlag}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.menuItemText, styles.menuItemDanger]}>Flag Poll</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
+
+interface PollOptionCardProps {
+  option: PollOption;
+  totalVotes: number;
+  rank: number;
+  showResults: boolean;
+  onVote: () => void;
+  votingType: string;
+}
+
+const PollOptionCard: React.FC<PollOptionCardProps> = ({
+  option,
+  totalVotes,
+  rank,
+  showResults,
+  onVote,
+  votingType,
+}) => {
+  const percentage = totalVotes > 0 ? Math.round((option.votes / totalVotes) * 100) : 0;
+  
+  const getBackgroundColor = () => {
+    if (!showResults) return '#F5F5F5';
+    if (rank === 0) return '#4CAF50';
+    if (rank === 1) return '#5B93FF';
+    return '#E0E0E0';
+  };
+
+  const getTextColor = () => {
+    if (!showResults) return '#1a1a1a';
+    if (rank === 0 || rank === 1) return '#FFFFFF';
+    return '#666666';
+  };
+
+  return (
+    <TouchableOpacity
+      style={[
+        styles.optionCard,
+        { backgroundColor: getBackgroundColor() },
+      ]}
+      onPress={onVote}
+      activeOpacity={0.7}
+      disabled={showResults}
+    >
+      <View style={styles.optionContent}>
+        {showResults && rank === 0 && (
+          <View style={styles.checkIconContainer}>
+            <Check size={16} color="#FFFFFF" strokeWidth={3} />
+          </View>
+        )}
+        <Text style={[styles.optionText, { color: getTextColor() }]}>
+          {option.text}
+        </Text>
+      </View>
+
+      {showResults && (
+        <View style={styles.optionRight}>
+          {votingType === 'Open Voting' && option.avatars && option.avatars.length > 0 && (
+            <View style={styles.avatarsContainer}>
+              {option.avatars.slice(0, 2).map((avatar, idx) => (
+                <Image
+                  key={idx}
+                  source={{ uri: avatar }}
+                  style={[
+                    styles.avatar,
+                    idx > 0 && styles.avatarOverlap,
+                  ]}
+                />
+              ))}
+            </View>
+          )}
+          <Text style={[styles.percentageText, { color: getTextColor() }]}>
+            {percentage}%
+          </Text>
+        </View>
+      )}
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -349,10 +529,10 @@ const styles = StyleSheet.create({
   card: {
     position: 'absolute',
     width: SCREEN_WIDTH - 40,
-    height: SCREEN_HEIGHT * 0.6,
+    maxHeight: SCREEN_HEIGHT * 0.7,
     backgroundColor: '#ffffff',
     borderRadius: 24,
-    padding: 32,
+    padding: 24,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -368,51 +548,125 @@ const styles = StyleSheet.create({
   },
   cardContent: {
     flex: 1,
+    gap: 20,
+  },
+  pollHeader: {
+    gap: 8,
+  },
+  pollHeaderTop: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  pollHeaderLeft: {
+    flex: 1,
+  },
+  menuButton: {
+    width: 32,
+    height: 32,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 32,
+    borderRadius: 16,
+    backgroundColor: '#F5F5F5',
   },
   questionText: {
-    fontSize: 28,
-    fontWeight: '600',
+    fontSize: 20,
+    fontWeight: '700',
     color: '#1a1a1a',
-    textAlign: 'center',
-    lineHeight: 38,
+    lineHeight: 28,
   },
-  respondButton: {
-    backgroundColor: '#5B93FF',
-    paddingHorizontal: 48,
-    paddingVertical: 16,
-    borderRadius: 30,
-    shadowColor: '#5B93FF',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  respondButtonText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#ffffff',
-  },
-  voteInfo: {
-    fontSize: 14,
+  pollMeta: {
+    fontSize: 13,
     color: '#999',
     fontWeight: '500',
   },
+  optionsContainer: {
+    gap: 12,
+    flex: 1,
+  },
+  optionCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+    borderRadius: 20,
+    minHeight: 56,
+  },
+  optionContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flex: 1,
+  },
+  checkIconContainer: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  optionText: {
+    fontSize: 16,
+    fontWeight: '600',
+    flex: 1,
+  },
+  optionRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  avatarsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  avatar: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+  },
+  avatarOverlap: {
+    marginLeft: -8,
+  },
+  percentageText: {
+    fontSize: 15,
+    fontWeight: '700',
+    minWidth: 40,
+    textAlign: 'right',
+  },
+  pollFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: '#F0F0F0',
+  },
+  footerItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  footerText: {
+    fontSize: 12,
+    color: '#999',
+    fontWeight: '500',
+  },
+
   actionsContainer: {
     backgroundColor: '#f8f9fa',
     paddingTop: 8,
   },
   actions: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 32,
     paddingBottom: 16,
+    gap: 24,
   },
   actionButton: {
     width: 56,
@@ -446,6 +700,62 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 12,
     elevation: 5,
+  },
+  createButton: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: '#5B93FF',
+    shadowColor: '#5B93FF',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 5,
+  },
+  menuOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  menuContainer: {
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    marginHorizontal: 40,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 16,
+    elevation: 10,
+  },
+  menuItem: {
+    paddingVertical: 18,
+    paddingHorizontal: 24,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+  },
+  menuItemLast: {
+    borderBottomWidth: 0,
+  },
+  menuItemText: {
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#1a1a1a',
+    textAlign: 'center',
+  },
+  menuItemDanger: {
+    color: '#FF4458',
   },
   emptyContainer: {
     flex: 1,
