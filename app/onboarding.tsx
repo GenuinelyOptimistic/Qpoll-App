@@ -1,87 +1,157 @@
 import React from 'react';
-import { StyleSheet,Text } from 'react-native';
+import { StyleSheet,Text, TouchableOpacity, View, Image } from 'react-native';
 import Onboarding from 'react-native-onboarding-swiper';
-import { Stack, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
+import { LinkText, Center } from '@/constants/styles';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useColorScheme } from '@/hooks/use-color-scheme';
+import { Colors } from '@/constants/theme';
 
-const onboardingSteps = [
+const ONBOARDING_STEPS = [
   {
     id: 1,
-    title: 'Welcome to Qpoll',
-    description: 'Get answers to your questions quickly through crowd-sourced polling.',
-    icon: '📊',
+    intro: true,
   },
   {
     id: 2,
-    title: 'Earn Money',
-    description: 'Get paid for your opinions by participating in polls.',
-    icon: '💰',
+    image: require('@/assets/images/react-logo.png'),
+    subtitle: 'Built with React Native and Expo Router',
+    action: 'Get Started',
+  },
+];
+
+const FEATURES = [
+  {
+    id: '1',
+    emoji: '📊',
+    title: 'Find Information',
+    description: 'Get answers to your questions quickly through crowd-sourced polling.',
   },
   {
-    id: 3,
+    id: '2',
+    emoji: '💰',
+    title: 'Earn Money',
+    description: 'Get paid for your opinions by participating in polls',
+  },
+  {
+    id: '3',
+    emoji: '🚀',
     title: 'Make Informed Decisions',
     description: 'Use community wisdom to make better choices in your daily life.',
-    icon: '💡',
   },
 ];
 
 export default function OnboardingScreen() {
   const router = useRouter();
+  const colorScheme = useColorScheme() ?? 'light';
 
   const completeOnboarding = () => {
     router.replace('/(main)');
   };
 
-  const pages = onboardingSteps.map((step) => ({
-    backgroundColor: '#ffffff',
-    image: (
-      <Text style={styles.icon}>{step.icon}</Text>
-    ),
-    title: (
-      <Text style={styles.title}>{step.title}</Text>
-    ),
-    subtitle: (
-      <Text style={styles.description}>{step.description}</Text>
-    ),
-  }));
+  const pages = ONBOARDING_STEPS.map((step) => {
+    const page: any = {
+      backgroundColor: Colors[colorScheme].background,
+      title: '',
+      subtitle: (
+        <View style={styles(colorScheme).container}>
+          {step.intro && (
+            <View style={styles(colorScheme).featuresList}>
+              {FEATURES.map((feature) => (
+                <View key={feature.id} style={styles(colorScheme).featureCard}>
+                  <View style={styles(colorScheme).iconContainer}>
+                    <Text style={styles(colorScheme).emoji}>{feature.emoji}</Text>
+                  </View>
+                  <View style={styles(colorScheme).textContainer}>
+                    <Text style={styles(colorScheme).featureTitle}>{feature.title}</Text>
+                    <Text style={styles(colorScheme).featureDescription}>
+                      {feature.description}
+                    </Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+          )}
+
+          {step.action && (
+            <View>
+              <TouchableOpacity onPress={() => router.push('/invite-code')}>
+                <Text style={[LinkText,Center]}>{step.action}</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      ),
+    };
+
+    if (step.image) {
+      page.image = <Image source={step.image} style={{ width: 100, height: 100 }} />;
+    }
+
+    return page;
+  });
 
   return (
-    <>
-      <Stack.Screen options={{ headerShown: false }} />
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors[colorScheme].background }}>
       <Onboarding
         pages={pages}
-        onDone={completeOnboarding}
         onSkip={completeOnboarding}
+        showDone={false}
         showNext={true}
         showSkip={true}
-        titleStyles={styles.title}
-        subTitleStyles={styles.description}
+        titleStyles={styles(colorScheme).title}
         bottomBarHighlight={false}
         bottomBarHeight={80}
       />
-    </>
+    </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  icon: {
-    fontSize: 80,
-    borderBlockColor: '#000',
-    borderWidth: 1,
-    textAlignVertical: 'center',
-    textAlign: 'center',
+const styles = (colorScheme: 'light' | 'dark') => StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 20,
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 20,
-    lineHeight: 34,
+    fontSize: 24,
+    fontWeight: '600',
+    color: Colors[colorScheme].text,
+    marginBottom: 8,
   },
-  description: {
+  subtitle: {
+    fontSize: 14,
+    color: colorScheme === 'dark' ? '#2a2a2a' : '#777671',
+  },
+  featuresList: {
+    gap: 12,
+    marginTop: '20%',
+  },
+  featureCard: {
+    backgroundColor: colorScheme === 'dark' ? '#2a2a2a' : '#FAF7EE',
+    borderRadius: 16,
+    padding: 16,
+  },
+  featureLeft: {
+    flex: 1,
+  },
+  iconContainer: {
+    marginRight: 12,
+  },
+  emoji: {
+    fontSize: 30,
+  },
+  textContainer: {
+    marginTop: 10,
+  },
+  featureTitle: {
     fontSize: 16,
-    textAlign: 'center',
-    lineHeight: 24,
-    marginBottom: 40,
-    paddingHorizontal: 10,
+    fontWeight: '600',
+    color: Colors[colorScheme].text,
+  },
+  featureDescription: {
+    fontSize: 14,
+    marginTop: 2,
+    color: colorScheme === 'dark' ? '#2a2a2a' : '#777671',
+    lineHeight: 21,
   },
 });
