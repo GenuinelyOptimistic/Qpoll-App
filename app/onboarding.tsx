@@ -16,14 +16,14 @@ const onboardingSteps = [
     description: 'Get answers to your questions quickly through crowd-sourced polling.',
     icon: '📊',
   },
-  {
-    id: 2,
-    title: 'No Forced Signups',
-    description: 'Explore the app freely. Sign up only when you\'re ready to create your own polls.',
-    icon: '🚀',
+    {
+    id: 1,
+    title: 'Earn Money',
+    description: 'Get paid for your opinions by participating in polls.',
+    icon: '💰',
   },
   {
-    id: 3,
+    id: 2,
     title: 'Make Informed Decisions',
     description: 'Use community wisdom to make better choices in your daily life.',
     icon: '💡',

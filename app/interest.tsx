@@ -10,7 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { CATEGORIES, Category } from './constants/categories';
-import { useCategories } from './contexts/CategoryContext';
+import { useCategories } from './context/CategoryContext';
 
 export default function InterestScreen() {
   const { selectedCategories, toggleCategory, isLoaded } = useCategories();

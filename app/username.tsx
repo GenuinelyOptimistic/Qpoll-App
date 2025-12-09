@@ -14,10 +14,14 @@ import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { Check } from 'lucide-react-native';
 
-export default function UsernameScreen() {
+import { ThemedText } from '@/components/themed-text';
+import { LinkText, Center } from '@/constants/styles';
+
+export default function CreateUsernameScreen() {
   const router = useRouter();
   const [username, setUsername] = useState<string>('');
   const [isValid, setIsValid] = useState<boolean>(false);
+  const [showSuccess, setShowSuccess] = useState<boolean>(false);
 
   const suggestions = useMemo(() => {
     if (!username) return [];
@@ -49,7 +53,7 @@ export default function UsernameScreen() {
     
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     console.log('Username created:', username);
-    router.push('/polls');
+    setShowSuccess(true);
   };
 
   const handleSuggestionPress = (suggestion: string) => {
@@ -79,28 +83,34 @@ export default function UsernameScreen() {
           keyboardShouldPersistTaps="handled"
         >
           <View style={styles.main}>
-            <Text style={styles.title}>Create username</Text>
-            <Text style={styles.subtitle}>You can always change this later.</Text>
+            {!showSuccess && (
+                    <>
+                        <Text style={styles.title}>Create username</Text>
+                        <Text style={styles.subtitle}>You can always change this later.</Text>
 
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="Username"
-                placeholderTextColor="#ccc"
-                value={username}
-                onChangeText={handleUsernameChange}
-                autoCapitalize="none"
-                autoCorrect={false}
-                autoFocus
-              />
-              {isValid && (
-                <View style={styles.checkmark}>
-                  <Check size={24} color="#4CD964" strokeWidth={3} />
-                </View>
-              )}
-            </View>
+                        <View style={styles.inputContainer}>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Username"
+                            placeholderTextColor="#ccc"
+                            value={username}
+                            onChangeText={handleUsernameChange}
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                            autoFocus
+                        />
+                        {isValid && (
+                            <View style={styles.checkmark}>
+                            <Check size={24} color="#4CD964" strokeWidth={3} />
+                            </View>
+                        )}
+                        </View>
+                    </>
+                )
+            }
 
-            {suggestions.length > 0 && (
+
+            {suggestions.length > 0 && !showSuccess && (
               <View style={styles.suggestionsContainer}>
                 <Text style={styles.suggestionsLabel}>Suggested</Text>
                 <ScrollView 
@@ -121,6 +131,19 @@ export default function UsernameScreen() {
                 </ScrollView>
               </View>
             )}
+
+            {showSuccess && (
+              <View style={styles.successContainer}>
+                <View style={styles.successCircle}>
+                  <Check size={48} color="#fff" strokeWidth={3} />
+                </View>
+                <Text style={styles.successTitle}>🥳 Perfect! We've reserved @{username} for you! </Text>
+                <Text style={styles.successSubtitle}>We'll text you as soon as your account is ready.</Text>
+                <TouchableOpacity onPress={() => router.push('/poll')}>
+                    <ThemedText style={[LinkText,Center]}>Already have an invite, start asking questions.</ThemedText>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         </ScrollView>
 
@@ -134,7 +157,7 @@ export default function UsernameScreen() {
             activeOpacity={0.8}
             disabled={!isValid}
           >
-            <Text style={styles.signUpButtonText}>Sign up</Text>
+            <Text style={styles.signUpButtonText}>Reserve</Text>
           </TouchableOpacity>
         </SafeAreaView>
       </KeyboardAvoidingView>
@@ -260,5 +283,31 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#ffffff',
     letterSpacing: 0.3,
+  },
+  successContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 80,
+  },
+  successCircle: {
+    width: 96,
+    height: 96,
+    borderRadius: 48,
+    backgroundColor: '#4CD964',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 32,
+  },
+  successTitle: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: '#1a1a1a',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  successSubtitle: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: '#999',
   },
 });

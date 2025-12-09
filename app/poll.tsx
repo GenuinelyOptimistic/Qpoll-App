@@ -16,7 +16,7 @@ import { Heart, MoreVertical, ArrowLeft, Check, Clock, Plus } from 'lucide-react
 import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { mockPolls, Poll, PollOption } from './mocks/polls';
-import { useCategories } from './contexts/CategoryContext';
+import { useCategories } from './context/CategoryContext';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.25;
