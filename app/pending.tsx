@@ -9,20 +9,21 @@ import { useRouter } from 'expo-router';
 import { Check } from 'lucide-react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { LinkText, Center, Content } from '@/constants/styles';
+import { globalStyles } from "./constants/global";
+
 
 export default function PendingScreen() {
   const router = useRouter();
 
   return (
-    <View style={[Content, {paddingHorizontal:60}]}>
+    <View style={[globalStyles.content, {paddingHorizontal:60}]}>
         <View style={[styles.successCircle, {alignSelf: 'center'}]}>
             <Check size={48} color="#fff" strokeWidth={3} />
         </View>
         <Text style={styles.successTitle}>🥳 Perfect! We have reserved your spot! </Text>
-        <Text style={[styles.successSubtitle, Center]}>We'll text you as soon as your account is ready.</Text>
+        <Text style={[styles.successSubtitle, globalStyles.center]}>We'll text you as soon as your account is ready.</Text>
         <TouchableOpacity onPress={() => router.push('/poll')}>
-            <ThemedText style={[LinkText,Center]}>Start answering questions</ThemedText>
+            <ThemedText style={[globalStyles.linkText, globalStyles.center]}>Start answering questions</ThemedText>
         </TouchableOpacity>
     </View>
     );

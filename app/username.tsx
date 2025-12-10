@@ -15,7 +15,8 @@ import * as Haptics from 'expo-haptics';
 import { Check } from 'lucide-react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { LinkText, Center } from '@/constants/styles';
+import { globalStyles } from "./constants/global";
+
 
 export default function CreateUsernameScreen() {
   const router = useRouter();
@@ -45,7 +46,7 @@ export default function CreateUsernameScreen() {
 
   const handleSkip = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    router.push('/polls');
+    router.push('/poll');
   };
 
   const handleSignUp = () => {
@@ -140,7 +141,7 @@ export default function CreateUsernameScreen() {
                 <Text style={styles.successTitle}>🥳 Perfect! We've reserved @{username} for you! </Text>
                 <Text style={styles.successSubtitle}>We'll text you as soon as your account is ready.</Text>
                 <TouchableOpacity onPress={() => router.push('/poll')}>
-                    <ThemedText style={[LinkText,Center]}>Already have an invite, start asking questions.</ThemedText>
+                    <ThemedText style={[globalStyles.linkText, globalStyles.center]}>Already have an invite, start asking questions.</ThemedText>
                 </TouchableOpacity>
               </View>
             )}

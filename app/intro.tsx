@@ -7,20 +7,20 @@ import { ThemedText } from '@/components/themed-text';
 
 
 import { Colors } from '@/constants/theme';
-import { Content, ButtonContainer, ButtonText, Center } from '@/constants/styles';
+import { globalStyles } from "./constants/global";
 
 export default function IntroScreen() {
   const router = useRouter();
   const colorScheme = useColorScheme() ?? 'light';
 
   return (
-      <View style={[Content, { marginTop: 60 }]}>
+      <View style={[globalStyles.content, { marginTop: 60 }]}>
         <View  style={{width: '100%', alignItems: 'center'}}>
           <Image source={require("../assets/images/StreetTalk.png")} style={{width: '100%', height: 200, resizeMode: 'contain', marginTop: 50, paddingHorizontal: 80}} />
-          <Text style={[styles(colorScheme).subtitle, Center]}>Helping companies quickly crowdsource information to make smarter decisions.</Text>
+          <Text style={[styles(colorScheme).subtitle, globalStyles.center]}>Helping companies quickly crowdsource information to make smarter decisions.</Text>
         </View>
-        <TouchableOpacity style={ButtonContainer} onPress={() => router.push('/onboarding')}>
-          <ThemedText style={ButtonText}>Get Started</ThemedText>
+        <TouchableOpacity style={globalStyles.buttonContainer} onPress={() => router.push('/onboarding')}>
+          <ThemedText style={globalStyles.buttonText}>Get Started</ThemedText>
         </TouchableOpacity>
       </View>
   );

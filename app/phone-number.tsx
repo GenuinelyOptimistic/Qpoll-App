@@ -4,11 +4,8 @@ import auth from 'firebase/auth';
 import { useRouter } from 'expo-router';
 import { useAuth } from './context/auth'; 
 import CountryPicker from 'react-native-country-picker-modal';
-import * as Location from 'expo-location';
 import { MaterialIcons } from '@expo/vector-icons';
 import { globalStyles } from "./constants/global";
-
-import { ButtonContainer, ButtonText } from '@/constants/styles';
 
 export default function PhoneScreen() {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -39,41 +36,9 @@ export default function PhoneScreen() {
     router.back();
   };
 
-  useEffect(() => {
-    // Get user's current location and set default country
-    const getLocation = async () => {
-      try {
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          console.error('Location permission denied');
-          return;
-        }
-
-        const position = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.High,
-        });
-
-        const response = await fetch(
-          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.coords.latitude},${position.coords.longitude}&key=YOUR_GOOGLE_API_KEY`
-        );
-        const data = await response.json();
-        const countryComponent = data.results[0]?.address_components.find(
-          (component: any) => component.types.includes('country')
-        );
-        if (countryComponent) {
-          setCountryCode(countryComponent.short_name);
-        }
-      } catch (error) {
-        console.error('Error getting location:', error);
-      }
-    };
-
-    getLocation();
-  }, []);
-
   // Timer effect for countdown
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: number;
 
     if (isVerifying && countdown > 0) {
       interval = setInterval(() => {
@@ -95,58 +60,58 @@ export default function PhoneScreen() {
   const loginWithPhoneNumber = async () => {
         router.push('/poll');
 
-    // if (!phoneNumber.trim()) {
-    //   alert('Please enter a valid phone number');
-    //   return;
-    // }
+    if (!phoneNumber.trim()) {
+      alert('Please enter a valid phone number');
+      return;
+    }
 
-    // try {
-    //   setLoading(true);
-    //   const formattedNumber = `+${callingCode}${phoneNumber.replace(/[^0-9]/g, '')}`;
+    try {
+      setLoading(true);
+      const formattedNumber = `+${callingCode}${phoneNumber.replace(/[^0-9]/g, '')}`;
 
-    //   // For development, completely bypass Firebase for test numbers
-    //   if (__DEV__ && (formattedNumber === '+16505553434' || formattedNumber === '+1234567890')) {
-    //     console.log('🎭 DEVELOPMENT MODE: Bypassing Firebase auth for test number:', formattedNumber);
-    //     // Simulate SMS sending delay
-    //     await new Promise(resolve => setTimeout(resolve, 1500));
-    //     // Pre-fill verification code and show verification screen
-    //     setVerificationCode('123456');
-    //     setIsVerifying(true);
-    //     setLoading(false);
-    //     return;
-    //   }
+      // For development, completely bypass Firebase for test numbers
+      if (__DEV__ && (formattedNumber === '+16505553434' || formattedNumber === '+1234567890')) {
+        console.log('🎭 DEVELOPMENT MODE: Bypassing Firebase auth for test number:', formattedNumber);
+        // Simulate SMS sending delay
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        // Pre-fill verification code and show verification screen
+        setVerificationCode('123456');
+        setIsVerifying(true);
+        setLoading(false);
+        return;
+      }
 
-    //   console.log('📱 Sending SMS to:', formattedNumber);
-    //   const result = await auth().signInWithPhoneNumber(formattedNumber);
-    //   setConfirmationResult(result);
-    //   setIsVerifying(true);
-    // } catch (error: any) {
-    //   console.error('❌ SMS Error:', error);
+      console.log('📱 Sending SMS to:', formattedNumber);
+      const result = await auth().signInWithPhoneNumber(formattedNumber);
+      setConfirmationResult(result);
+      setIsVerifying(true);
+    } catch (error: any) {
+      console.error('❌ SMS Error:', error);
 
-    //   // In development, if reCAPTCHA fails, show helpful message
-    //   if (__DEV__ && error.code === 'auth/captcha-check-failed') {
-    //     alert('Development Mode: reCAPTCHA failed. Use test numbers +1 650-555-3434 or +1 234-567-890 with code 123456');
-    //     setLoading(false);
-    //     return;
-    //   }
+      // In development, if reCAPTCHA fails, show helpful message
+      if (__DEV__ && error.code === 'auth/captcha-check-failed') {
+        alert('Development Mode: reCAPTCHA failed. Use test numbers +1 650-555-3434 or +1 234-567-890 with code 123456');
+        setLoading(false);
+        return;
+      }
 
-    //   let errorMessage = 'Error sending verification code. Please check your phone number and try again.';
+      let errorMessage = 'Error sending verification code. Please check your phone number and try again.';
 
-    //   // Handle specific Firebase auth errors
-    //   if (error.code === 'auth/invalid-phone-number') {
-    //     errorMessage = 'Invalid phone number format. Please check and try again.';
-    //   } else if (error.code === 'auth/missing-phone-number') {
-    //     errorMessage = 'Phone number is required.';
-    //   } else if (error.code === 'auth/too-many-requests') {
-    //     errorMessage = 'Too many requests. Please wait before trying again.';
-    //   } else if (error.code === 'auth/quota-exceeded') {
-    //     errorMessage = 'SMS quota exceeded. Please try again later.';
-    //   }
+      // Handle specific Firebase auth errors
+      if (error.code === 'auth/invalid-phone-number') {
+        errorMessage = 'Invalid phone number format. Please check and try again.';
+      } else if (error.code === 'auth/missing-phone-number') {
+        errorMessage = 'Phone number is required.';
+      } else if (error.code === 'auth/too-many-requests') {
+        errorMessage = 'Too many requests. Please wait before trying again.';
+      } else if (error.code === 'auth/quota-exceeded') {
+        errorMessage = 'SMS quota exceeded. Please try again later.';
+      }
 
-    //   alert(errorMessage);
-    // } finally {
-    //   setLoading(false);
-    // }
+      alert(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const verifyCode = async (code: string) => {
@@ -256,11 +221,11 @@ export default function PhoneScreen() {
             </Text>
 
             <TouchableOpacity
-                style={ButtonContainer}
+                style={globalStyles.buttonContainer}
                 onPress={loginWithPhoneNumber}
                 disabled={loading}
             >
-                <Text style={ButtonText}>
+                <Text style={globalStyles.buttonText}>
                     {loading ? 'Sending...' : 'Send Verification Code'}
                 </Text>
             </TouchableOpacity>
