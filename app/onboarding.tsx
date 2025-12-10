@@ -33,7 +33,7 @@ export default function OnboardingScreen() {
 
   return (
     <ScrollView style={{ flex: 1 , backgroundColor: Colors[colorScheme].background}}>
-      <View style={[globalStyles.content, { marginTop: 60 }]}>
+      <View style={[globalStyles(colorScheme).content, { marginTop: 60 }]}>
         <View style={styles(colorScheme).featuresList}>
           {FEATURES.map((feature) => (
             <View key={feature.id} style={styles(colorScheme).featureCard}>
@@ -49,8 +49,8 @@ export default function OnboardingScreen() {
             </View>
           ))}
         </View>
-        <TouchableOpacity style={globalStyles.buttonContainer} onPress={() => router.push('/(main)')}>
-          <Text style={globalStyles.buttonText}>Continue</Text>
+        <TouchableOpacity style={globalStyles(colorScheme).buttonContainer} onPress={() => router.push('/(main)')}>
+          <Text style={globalStyles(colorScheme).buttonText}>Continue</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

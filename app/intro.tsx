@@ -14,13 +14,13 @@ export default function IntroScreen() {
   const colorScheme = useColorScheme() ?? 'light';
 
   return (
-      <View style={[globalStyles.content, { backgroundColor: Colors[colorScheme].background, justifyContent: 'flex-start' }]}>
+      <View style={[globalStyles(colorScheme).content, { backgroundColor: Colors[colorScheme].background, justifyContent: 'flex-start' }]}>
         <View  style={{paddingHorizontal: 24, alignItems: 'center', flex: 1, justifyContent: 'center'}}>
           <Image source={colorScheme === 'light' ? require("../assets/images/StreetTalk-dark.png") : require("../assets/images/StreetTalk-light.png")} style={{width: '80%', height: undefined, aspectRatio: 6/1, resizeMode: 'contain', alignSelf: 'center', overflow: 'hidden', marginBottom: 12}} />
-          <Text style={[styles(colorScheme).subtitle, globalStyles.center, { color: Colors[colorScheme].text, fontSize: 12 }]}>Helping companies quickly crowdsource information to make smarter decisions.</Text>
+          <Text style={[styles(colorScheme).subtitle, globalStyles(colorScheme).center, { color: Colors[colorScheme].text, fontSize: 12 }]}>Helping companies quickly crowdsource information to make smarter decisions.</Text>
         </View>
-        <TouchableOpacity style={[globalStyles.buttonContainer, { marginBottom: 64 }]} onPress={() => router.push('/onboarding')}>
-          <ThemedText style={globalStyles.buttonText}>Get Started</ThemedText>
+        <TouchableOpacity style={[globalStyles(colorScheme).buttonContainer, { marginBottom: 64 }]} onPress={() => router.push('/onboarding')}>
+          <ThemedText style={globalStyles(colorScheme).buttonText}>Get Started</ThemedText>
         </TouchableOpacity>
       </View>
   );
