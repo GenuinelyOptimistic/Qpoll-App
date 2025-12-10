@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import {
 	StyleSheet,
 	Text,
@@ -13,6 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
 import { Check } from "lucide-react-native";
+import LottieView from "lottie-react-native";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 
 import { Colors } from "@/constants/theme";
@@ -62,7 +63,10 @@ export default function CreateUsernameScreen() {
 
 	const handleSignUp = () => {
 		if (!isValid) return;
-
+		else if (showSuccess) {
+			router.push("/poll");
+			return;
+		}
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 		console.log("Username created:", username);
 		setShowSuccess(true);
@@ -81,9 +85,16 @@ export default function CreateUsernameScreen() {
 			<SafeAreaView edges={["top"]} style={styles(colorScheme).header}>
 				<View style={styles(colorScheme).headerLeft} />
 				<View style={styles(colorScheme).headerRight}>
-					<TouchableOpacity onPress={handleSkip} activeOpacity={0.7}>
-						<Text style={styles(colorScheme).skipButton}>Skip</Text>
-					</TouchableOpacity>
+					{!showSuccess && (
+						<TouchableOpacity
+							onPress={handleSkip}
+							activeOpacity={0.7}
+						>
+							<Text style={styles(colorScheme).skipButton}>
+								Skip
+							</Text>
+						</TouchableOpacity>
+					)}
 				</View>
 			</SafeAreaView>
 
@@ -190,36 +201,35 @@ export default function CreateUsernameScreen() {
 
 						{showSuccess && (
 							<View style={styles(colorScheme).successContainer}>
-								<View style={styles(colorScheme).successCircle}>
-									<Check
-										size={48}
-										color="#fff"
-										strokeWidth={3}
-									/>
-								</View>
-								<Text style={styles(colorScheme).successTitle}>
+								<LottieView
+									source={require("../assets/animations/success.json")}
+									autoPlay
+									loop={false}
+									style={style.lottieAnimation}
+									speed={0.5}
+								/>
+								<Text
+									style={[
+										styles(colorScheme).successTitle,
+										{ marginTop: -40 },
+									]}
+								>
 									🥳 Perfect! We've reserved @{username} for
 									you!{" "}
 								</Text>
 								<Text
-									style={styles(colorScheme).successSubtitle}
+									style={[
+										styles(colorScheme).successSubtitle,
+										{
+											paddingHorizontal: 40,
+											textAlign: "center",
+										},
+									]}
 								>
-									We'll text you as soon as your account is
-									ready.
+									{/* TODO: Do not show this if you already entered an invite code*/}
+									We'll text you with details as soon as your
+									account is ready.
 								</Text>
-								<TouchableOpacity
-									onPress={() => router.push("/poll")}
-								>
-									<ThemedText
-										style={[
-											globalStyles(colorScheme).linkText,
-											globalStyles(colorScheme).center,
-										]}
-									>
-										Already have an invite, start asking
-										questions.
-									</ThemedText>
-								</TouchableOpacity>
 							</View>
 						)}
 					</View>
@@ -240,7 +250,9 @@ export default function CreateUsernameScreen() {
 						disabled={!isValid}
 					>
 						<Text style={styles(colorScheme).signUpButtonText}>
-							Reserve
+							{!showSuccess
+								? "Reserve"
+								: "Start Asking Questions"}
 						</Text>
 					</TouchableOpacity>
 				</SafeAreaView>
@@ -366,3 +378,15 @@ const styles = (colorScheme: "light" | "dark") =>
 			marginBottom: 32,
 		},
 	});
+
+const style = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	lottieAnimation: {
+		width: 250, // Specify width
+		height: 250, // Specify height
+	},
+});
