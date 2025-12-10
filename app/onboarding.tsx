@@ -2,10 +2,11 @@ import React from 'react';
 import { StyleSheet,Text, TouchableOpacity, View, Image } from 'react-native';
 import Onboarding from 'react-native-onboarding-swiper';
 import { useRouter } from 'expo-router';
-import { LinkText, Center } from '@/constants/styles';
+import { ButtonContainer, ButtonText, Center } from '@/constants/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Colors } from '@/constants/theme';
+
 
 const ONBOARDING_STEPS = [
   {
@@ -14,7 +15,7 @@ const ONBOARDING_STEPS = [
   },
   {
     id: 2,
-    image: require('@/assets/images/react-logo.png'),
+    image: require('@/assets/images/StreetTalk.png'),
     subtitle: 'Built with React Native and Expo Router',
     action: 'Get Started',
   },
@@ -56,36 +57,41 @@ export default function OnboardingScreen() {
       subtitle: (
         <View style={styles(colorScheme).container}>
           {step.intro && (
-            <View style={styles(colorScheme).featuresList}>
-              {FEATURES.map((feature) => (
-                <View key={feature.id} style={styles(colorScheme).featureCard}>
-                  <View style={styles(colorScheme).iconContainer}>
-                    <Text style={styles(colorScheme).emoji}>{feature.emoji}</Text>
+            <View>
+              <View style={styles(colorScheme).featuresList}>
+                {FEATURES.map((feature) => (
+                  <View key={feature.id} style={styles(colorScheme).featureCard}>
+                    <View style={styles(colorScheme).iconContainer}>
+                      <Text style={styles(colorScheme).emoji}>{feature.emoji}</Text>
+                    </View>
+                    <View style={styles(colorScheme).textContainer}>
+                      <Text style={styles(colorScheme).featureTitle}>{feature.title}</Text>
+                      <Text style={styles(colorScheme).featureDescription}>
+                        {feature.description}
+                      </Text>
+                    </View>
                   </View>
-                  <View style={styles(colorScheme).textContainer}>
-                    <Text style={styles(colorScheme).featureTitle}>{feature.title}</Text>
-                    <Text style={styles(colorScheme).featureDescription}>
-                      {feature.description}
-                    </Text>
-                  </View>
-                </View>
-              ))}
+                ))}
+              </View>
             </View>
           )}
 
           {step.action && (
-            <View>
-              <TouchableOpacity onPress={() => router.push('/invite-code')}>
-                <Text style={[LinkText,Center]}>{step.action}</Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity style={ButtonContainer} onPress={() => router.push('/invite-code')}>
+              <Text style={ButtonText}>{step.action}</Text>
+            </TouchableOpacity>
           )}
         </View>
       ),
     };
 
     if (step.image) {
-      page.image = <Image source={step.image} style={{ width: 100, height: 100 }} />;
+      page.image = (
+        <View  style={{width: '100%', alignItems: 'center'}}>
+          <Image source={step.image} style={{width: '100%', height: 200, resizeMode: 'contain', marginTop: 50, paddingHorizontal: 80}} />
+          <Text style={[styles(colorScheme).subtitle, Center]}>Helping companies quickly crowdsource information to make smarter decisions.</Text>
+        </View>
+      );
     }
 
     return page;
@@ -108,6 +114,9 @@ export default function OnboardingScreen() {
 }
 
 const styles = (colorScheme: 'light' | 'dark') => StyleSheet.create({
+  featureTitle: {
+    fontSize: 206,
+  },
   container: {
     flex: 1,
     paddingHorizontal: 20,
@@ -120,14 +129,14 @@ const styles = (colorScheme: 'light' | 'dark') => StyleSheet.create({
   },
   subtitle: {
     fontSize: 14,
-    color: colorScheme === 'dark' ? '#2a2a2a' : '#777671',
+    color: colorScheme === 'dark' ? '#2a2a2a' : '#A8ABAF',
   },
   featuresList: {
     gap: 12,
-    marginTop: '20%',
+    marginTop: 30,
   },
   featureCard: {
-    backgroundColor: colorScheme === 'dark' ? '#2a2a2a' : '#FAF7EE',
+    backgroundColor: colorScheme === 'dark' ? '#2a2a2a' : '#F0F5FA',
     borderRadius: 16,
     padding: 16,
   },

@@ -29,6 +29,8 @@ export const Italic = {
 }   
 
 export const ButtonContainer = {
+    width: '100%',
+    resizeMode: 'contain' as const,
     backgroundColor: '#5B93FF',
     padding: 14,
     borderRadius: 10,
