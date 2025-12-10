@@ -214,14 +214,14 @@ export default function PhoneScreen() {
             By continuing, you agree to StreetTalk's{' '}
             <Text
                 style={styles(colorScheme).link}
-                onPress={() => Linking.openURL('https://spotcam.com/terms')}
+                onPress={() => Linking.openURL('https://streettalk.com/terms')}
             >
                 Terms of Use
             </Text>
             <Text style={styles(colorScheme).termsText}> and confirm that you have read our </Text>
             <Text
                 style={styles(colorScheme).link}
-                onPress={() => Linking.openURL('https://spotcam.com/privacy')}
+                onPress={() => Linking.openURL('https://streettalk.com/privacy')}
             >
                 Privacy Policy.
             </Text>
@@ -342,7 +342,7 @@ const styles = (colorScheme: 'light' | 'dark') => StyleSheet.create({
     paddingBottom: 20,
   },
   link: {
-    color: Colors[colorScheme].tint,
+    color: '#5B93FF',
     textDecorationLine: 'underline',
   },
   phoneInputContainer: {

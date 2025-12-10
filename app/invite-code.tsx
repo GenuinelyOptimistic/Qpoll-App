@@ -28,7 +28,7 @@ export default function PhoneScreen() {
       setTimeout(() => {
           setLoading(false);
           // On success, navigate to the main app screen
-          router.push('/poll');
+          router.push('/username');
       }, 2000);
   };
 
