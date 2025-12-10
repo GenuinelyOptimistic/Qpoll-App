@@ -10,7 +10,7 @@ export default function HomeScreen() {
   const router = useRouter();
   
   return (
-    <ScrollView style={{ flex: 1 , backgroundColor: '#fff'}} contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <ThemedView style={globalStyles.content}>
         <ThemedView style={styles.titleContainer}>
           <ThemedText style={styles.title}>Welcome!</ThemedText>

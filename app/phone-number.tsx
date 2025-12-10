@@ -2,14 +2,22 @@ import { useState, useEffect, useRef } from "react";
 import { View, TextInput, Text, TouchableOpacity, StyleSheet, Linking, Platform } from "react-native";
 import auth from 'firebase/auth';
 import { useRouter } from 'expo-router';
-import { useAuth } from './context/auth'; 
+import { useAuth } from './context/auth';
 import CountryPicker from 'react-native-country-picker-modal';
 import { MaterialIcons } from '@expo/vector-icons';
 import { globalStyles } from "./constants/global";
+import { useThemeColor } from '@/hooks/use-theme-color';
+import { Colors } from '@/constants/theme';
+import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export default function PhoneScreen() {
+  const colorScheme = useColorScheme() ?? 'light';
+  const backgroundColor = useThemeColor({}, 'background');
+  const textColor = useThemeColor({}, 'text');
+  const iconColor = useThemeColor({}, 'icon');
+
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [confirmationResult, setConfirmationResult] = useState<any>(null);  
+  const [confirmationResult, setConfirmationResult] = useState<any>(null);
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
   const [loading, setLoading] = useState(false);
@@ -163,18 +171,18 @@ export default function PhoneScreen() {
   };
 
   return (
-    <View style={globalStyles.container}>
+    <View style={[globalStyles.container, { backgroundColor }]}>
       {!isVerifying ? (
         <View>
             <View>
               <TouchableOpacity style={globalStyles.customBackButton} onPress={handleBackPress}>
-                <MaterialIcons name="arrow-back" size={32} color="#333" />
+                <MaterialIcons name="arrow-back" size={32} color={iconColor} />
               </TouchableOpacity>
             </View>
-            <Text style={globalStyles.title}>Enter Phone Number</Text>
-            <View style={styles.phoneInputContainer}>
+            <Text style={[globalStyles.title, { color: textColor }]}>Enter Phone Number</Text>
+            <View style={styles(colorScheme).phoneInputContainer}>
             <TouchableOpacity
-                style={styles.countryPickerButton}
+                style={styles(colorScheme).countryPickerButton}
                 onPress={() => setShowCountryPicker(true)}
             >
                 <CountryPicker
@@ -191,33 +199,33 @@ export default function PhoneScreen() {
                 }}
                 onClose={() => setShowCountryPicker(false)}
                 />
-                <Text style={styles.callingCode}>+{callingCode}</Text>
+                <Text style={styles(colorScheme).callingCode}>+{callingCode}</Text>
             </TouchableOpacity>
             <TextInput
-                style={styles.phoneInput}
+                style={styles(colorScheme).phoneInput}
                 value={phoneNumber}
                 onChangeText={setPhoneNumber}
                 placeholder="Phone number"
                 keyboardType="phone-pad"
             />
             </View>
-            
-            <Text style={styles.termsText}>
+
+            <Text style={styles(colorScheme).termsText}>
             By continuing, you agree to StreetTalk's{' '}
             <Text
-                style={styles.link}
+                style={styles(colorScheme).link}
                 onPress={() => Linking.openURL('https://spotcam.com/terms')}
             >
                 Terms of Use
             </Text>
-            <Text style={styles.termsText}> and confirm that you have read StreetTalk's </Text>
+            <Text style={styles(colorScheme).termsText}> and confirm that you have read our </Text>
             <Text
-                style={styles.link}
+                style={styles(colorScheme).link}
                 onPress={() => Linking.openURL('https://spotcam.com/privacy')}
             >
                 Privacy Policy.
             </Text>
-            <Text style={styles.termsText}> If you sign up with SMS, SMS fees may apply.</Text>
+            <Text style={styles(colorScheme).termsText}> If you sign up with SMS, SMS fees may apply.</Text>
             </Text>
 
             <TouchableOpacity
@@ -234,17 +242,17 @@ export default function PhoneScreen() {
         <View>
             <View>
               <TouchableOpacity style={globalStyles.customBackButton} onPress={handleBackPress}>
-                <MaterialIcons name="arrow-back" size={32} color="#333" />
+                <MaterialIcons name="arrow-back" size={32} color={iconColor} />
               </TouchableOpacity>
             </View>
-            <Text style={globalStyles.title}>Enter 6-digit verification code</Text>
-            <Text style={globalStyles.subtitle}>your code was sent to +{callingCode + " " + phoneNumber}</Text>
+            <Text style={[globalStyles.title, { color: textColor }]}>Enter 6-digit verification code</Text>
+            <Text style={[globalStyles.subtitle, { color: iconColor }]}>your code was sent to +{callingCode + " " + phoneNumber}</Text>
 
-            <View style={styles.otpContainer}>
+            <View style={styles(colorScheme).otpContainer}>
                 {[...Array(6)].map((_, index) => (
                     <TextInput
                         key={index}
-                        style={styles.otpInput}
+                        style={styles(colorScheme).otpInput}
                         value={verificationCode[index] || ''}
                         onChangeText={(text) => {
                             const newCode = verificationCode.split('');
@@ -262,37 +270,39 @@ export default function PhoneScreen() {
                         }}
                         keyboardType="number-pad"
                         maxLength={1}
-                        ref={(ref) => (inputRefs.current[index] = ref)}
+                        ref={(ref) => {
+                          inputRefs.current[index] = ref;
+                        }}
                     />
                 ))}
             </View>
 
             {verificationWrong && (
-                <Text style={styles.errorText}>Invalid verification code. Please try again.</Text>
+                <Text style={styles(colorScheme).errorText}>Invalid verification code. Please try again.</Text>
             )}
 
             <TouchableOpacity
                 style={[
-                    styles.button,
+                    globalStyles.buttonContainer,
                     {opacity: verificationCode.length === 6 ? 1 : 0.5}
                 ]}
                 onPress={() => verifyCode(verificationCode)}
                 disabled={verificationCode.length !== 6 || loading}
             >
-                <Text style={styles.buttonText}>
+                <Text style={globalStyles.buttonText}>
                     {loading ? 'Verifying...' : 'Verify Code'}
                 </Text>
             </TouchableOpacity>
 
             {countdown > 0 ? (
-                <Text style={styles.timerText}>Resend code in {countdown} seconds</Text>
+                <Text style={styles(colorScheme).timerText}>Resend code in {countdown} seconds</Text>
             ) : (
                 showResendPrompt && (
                   <TouchableOpacity
                       onPress={resendVerificationCode}
                       disabled={resendLoading}
                   >
-                      <Text style={styles.resendText}>
+                      <Text style={styles(colorScheme).resendText}>
                           {resendLoading ? 'Sending...' : 'Resend Code'}
                       </Text>
                   </TouchableOpacity>
@@ -304,28 +314,18 @@ export default function PhoneScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = (colorScheme: 'light' | 'dark') => StyleSheet.create({
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: Colors[colorScheme].icon,
     borderRadius: 8,
     padding: 15,
     marginBottom: 20,
     fontSize: 16,
-  },
-  button: {
-    backgroundColor: '#2f95dc',
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
+    color: Colors[colorScheme].text,
   },
   backButtonText: {
-    color: '#666',
+    color: Colors[colorScheme].icon,
     fontSize: 16,
     textDecorationLine: 'underline',
   },
@@ -336,13 +336,13 @@ const styles = StyleSheet.create({
   },
   termsText: {
     fontSize: 12,
-    color: '#666',
+    color: Colors[colorScheme].icon,
     textAlign: 'center',
     lineHeight: 18,
     paddingBottom: 20,
   },
   link: {
-    color: '#2f95dc',
+    color: Colors[colorScheme].tint,
     textDecorationLine: 'underline',
   },
   phoneInputContainer: {
@@ -354,7 +354,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: Colors[colorScheme].icon,
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: Platform.OS === 'ios' ? 7 : 12,
@@ -363,14 +363,16 @@ const styles = StyleSheet.create({
   callingCode: {
     marginLeft: 5,
     fontSize: 16,
+    color: Colors[colorScheme].text,
   },
   phoneInput: {
     flex: 1,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: Colors[colorScheme].icon,
     borderRadius: 8,
     padding: 15,
     fontSize: 16,
+    color: Colors[colorScheme].text,
   },
   otpContainer: {
     flexDirection: 'row',
@@ -381,43 +383,44 @@ const styles = StyleSheet.create({
     width: 45,
     height: 60,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: Colors[colorScheme].icon,
     borderRadius: 8,
     textAlign: 'center',
     fontSize: 20,
     marginHorizontal: 5,
+    color: Colors[colorScheme].text,
   },
   timerText: {
     textAlign: 'center',
     fontSize: 14,
-    color: '#666',
+    color: Colors[colorScheme].icon,
     marginVertical: 15,
   },
   resendText: {
-    color: '#2f95dc',
+    color: Colors[colorScheme].tint,
     fontSize: 16,
     fontWeight: '600',
     marginTop: 30,
     textAlign: 'center',
   },
   devNotice: {
-    backgroundColor: '#f0f8ff',
+    backgroundColor: colorScheme === 'dark' ? '#2a2a2a' : '#f0f8ff',
     borderRadius: 8,
     padding: 12,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: '#2f95dc',
+    borderColor: Colors[colorScheme].tint,
   },
   devTitle: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#2f95dc',
+    color: Colors[colorScheme].tint,
     marginBottom: 8,
     textAlign: 'center',
   },
   devText: {
     fontSize: 12,
-    color: '#666',
+    color: Colors[colorScheme].icon,
     textAlign: 'center',
     lineHeight: 16,
   },

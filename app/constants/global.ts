@@ -5,7 +5,6 @@ export const globalStyles = {
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
   },
   title: {
     marginTop: 50,
@@ -21,8 +20,7 @@ export const globalStyles = {
   },
   customBackButton: {
     zIndex: 1,
-    paddingVertical: 10,
-    paddingTop: Platform.OS === 'ios' ? 40 : 0,
+    paddingTop: Platform.OS === 'ios' ? 40 : 10,
   },
   modalTitle: {
     fontSize: 20,
@@ -56,7 +54,7 @@ export const globalStyles = {
     fontStyle: 'italic' as const,
     fontSize: 14,
     lineHeight: 21,
-  },   
+  },
   buttonContainer: {
     width: '100%' as const,
     resizeMode: 'contain' as const,
