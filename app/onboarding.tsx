@@ -1,11 +1,10 @@
 import React from 'react';
-import { StyleSheet,Text, View, ScrollView } from 'react-native';
+import { StyleSheet,Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
 import { Colors } from '@/constants/theme';
-import { Content, ButtonContainer, ButtonText, Center } from '@/constants/styles';
-
+import { Content, ButtonContainer, ButtonText } from '@/constants/styles';
 
 const FEATURES = [
   {
@@ -50,6 +49,9 @@ export default function OnboardingScreen() {
             </View>
           ))}
         </View>
+        <TouchableOpacity style={ButtonContainer} onPress={() => router.push('/(main)')}>
+          <Text style={ButtonText}>Continue</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );

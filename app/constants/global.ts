@@ -10,7 +10,7 @@ export const globalStyles = {
   title: {
     marginTop: 50,
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: 'bold' as const,
     marginBottom: 10,
   },
   subtitle: {

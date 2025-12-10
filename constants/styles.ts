@@ -29,12 +29,12 @@ export const Italic = {
 }   
 
 export const ButtonContainer = {
-    width: '100%',
+    width: '100%' as const,
     resizeMode: 'contain' as const,
     backgroundColor: '#5B93FF',
     padding: 14,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: 'center' as const,
     shadowColor: '#5B93FF',
     shadowOffset: {
       width: 0,
@@ -47,11 +47,10 @@ export const ButtonContainer = {
 
 export const ButtonText = {
     fontSize: 17,
-    fontWeight: '600',
+    fontWeight: '600' as const,
     color: '#ffffff',
     letterSpacing: 0.3,
 }
-
 
 export const LinkText = {
     fontSize: 14,

@@ -28,6 +28,7 @@ export default function RootLayout() {
             <Stack.Screen name="invite-code" options={{ headerShown: false }} />
             <Stack.Screen name="phone-number" options={{ headerShown: false }} />
             <Stack.Screen name="pending" options={{ headerShown: false }} />
+            <Stack.Screen name="intro" options={{ headerShown: false }} />
           </Stack>
           <StatusBar style="auto" />
         </AuthContextProvider>

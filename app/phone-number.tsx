@@ -8,6 +8,8 @@ import * as Location from 'expo-location';
 import { MaterialIcons } from '@expo/vector-icons';
 import { globalStyles } from "./constants/global";
 
+import { ButtonContainer, ButtonText } from '@/constants/styles';
+
 export default function PhoneScreen() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [confirmationResult, setConfirmationResult] = useState<any>(null);  
@@ -252,12 +254,13 @@ export default function PhoneScreen() {
             </Text>
             <Text style={styles.termsText}> If you sign up with SMS, SMS fees may apply.</Text>
             </Text>
+
             <TouchableOpacity
-                style={styles.button}
+                style={ButtonContainer}
                 onPress={loginWithPhoneNumber}
                 disabled={loading}
             >
-                <Text style={styles.buttonText}>
+                <Text style={ButtonText}>
                     {loading ? 'Sending...' : 'Send Verification Code'}
                 </Text>
             </TouchableOpacity>
