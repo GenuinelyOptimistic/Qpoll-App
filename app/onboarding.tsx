@@ -1,25 +1,11 @@
 import React from 'react';
-import { StyleSheet,Text, TouchableOpacity, View, Image } from 'react-native';
-import Onboarding from 'react-native-onboarding-swiper';
+import { StyleSheet,Text, View, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
-import { ButtonContainer, ButtonText, Center } from '@/constants/styles';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+
 import { Colors } from '@/constants/theme';
+import { Content, ButtonContainer, ButtonText, Center } from '@/constants/styles';
 
-
-const ONBOARDING_STEPS = [
-  {
-    id: 1,
-    intro: true,
-  },
-  {
-    id: 2,
-    image: require('@/assets/images/StreetTalk.png'),
-    subtitle: 'Built with React Native and Expo Router',
-    action: 'Get Started',
-  },
-];
 
 const FEATURES = [
   {
@@ -46,77 +32,30 @@ export default function OnboardingScreen() {
   const router = useRouter();
   const colorScheme = useColorScheme() ?? 'light';
 
-  const completeOnboarding = () => {
-    router.replace('/(main)');
-  };
-
-  const pages = ONBOARDING_STEPS.map((step) => {
-    const page: any = {
-      backgroundColor: Colors[colorScheme].background,
-      title: '',
-      subtitle: (
-        <View style={styles(colorScheme).container}>
-          {step.intro && (
-            <View>
-              <View style={styles(colorScheme).featuresList}>
-                {FEATURES.map((feature) => (
-                  <View key={feature.id} style={styles(colorScheme).featureCard}>
-                    <View style={styles(colorScheme).iconContainer}>
-                      <Text style={styles(colorScheme).emoji}>{feature.emoji}</Text>
-                    </View>
-                    <View style={styles(colorScheme).textContainer}>
-                      <Text style={styles(colorScheme).featureTitle}>{feature.title}</Text>
-                      <Text style={styles(colorScheme).featureDescription}>
-                        {feature.description}
-                      </Text>
-                    </View>
-                  </View>
-                ))}
+  return (
+    <ScrollView style={{ flex: 1 , backgroundColor: '#fff'}}>
+      <View style={[Content, { marginTop: 60 }]}>
+        <View style={styles(colorScheme).featuresList}>
+          {FEATURES.map((feature) => (
+            <View key={feature.id} style={styles(colorScheme).featureCard}>
+              <View style={styles(colorScheme).iconContainer}>
+                <Text style={styles(colorScheme).emoji}>{feature.emoji}</Text>
+              </View>
+              <View style={styles(colorScheme).textContainer}>
+                <Text style={styles(colorScheme).featureTitle}>{feature.title}</Text>
+                <Text style={styles(colorScheme).featureDescription}>
+                  {feature.description}
+                </Text>
               </View>
             </View>
-          )}
-
-          {step.action && (
-            <TouchableOpacity style={ButtonContainer} onPress={() => router.push('/invite-code')}>
-              <Text style={ButtonText}>{step.action}</Text>
-            </TouchableOpacity>
-          )}
+          ))}
         </View>
-      ),
-    };
-
-    if (step.image) {
-      page.image = (
-        <View  style={{width: '100%', alignItems: 'center'}}>
-          <Image source={step.image} style={{width: '100%', height: 200, resizeMode: 'contain', marginTop: 50, paddingHorizontal: 80}} />
-          <Text style={[styles(colorScheme).subtitle, Center]}>Helping companies quickly crowdsource information to make smarter decisions.</Text>
-        </View>
-      );
-    }
-
-    return page;
-  });
-
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors[colorScheme].background }}>
-      <Onboarding
-        pages={pages}
-        onSkip={completeOnboarding}
-        showDone={false}
-        showNext={true}
-        showSkip={true}
-        titleStyles={styles(colorScheme).title}
-        bottomBarHighlight={false}
-        bottomBarHeight={80}
-      />
-    </SafeAreaView>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = (colorScheme: 'light' | 'dark') => StyleSheet.create({
-  featureTitle: {
-    fontSize: 206,
-  },
   container: {
     flex: 1,
     paddingHorizontal: 20,
