@@ -32,7 +32,7 @@ export default function OnboardingScreen() {
   const colorScheme = useColorScheme() ?? 'light';
 
   return (
-    <ScrollView style={{ flex: 1 , backgroundColor: '#fff'}}>
+    <ScrollView style={{ flex: 1 , backgroundColor: Colors[colorScheme].background}}>
       <View style={[globalStyles.content, { marginTop: 60 }]}>
         <View style={styles(colorScheme).featuresList}>
           {FEATURES.map((feature) => (
@@ -70,11 +70,11 @@ const styles = (colorScheme: 'light' | 'dark') => StyleSheet.create({
   },
   subtitle: {
     fontSize: 14,
-    color: colorScheme === 'dark' ? '#2a2a2a' : '#A8ABAF',
+    color: colorScheme === 'dark' ? '#2A2A2A' : '#A8ABAF',
   },
   featuresList: {
     gap: 12,
-    marginTop: 30,
+    marginTop: 100,
   },
   featureCard: {
     backgroundColor: colorScheme === 'dark' ? '#2a2a2a' : '#F0F5FA',
@@ -101,7 +101,7 @@ const styles = (colorScheme: 'light' | 'dark') => StyleSheet.create({
   featureDescription: {
     fontSize: 14,
     marginTop: 2,
-    color: colorScheme === 'dark' ? '#2a2a2a' : '#777671',
+    color: colorScheme === 'dark' ? '#717477' : '#2A2A2A',
     lineHeight: 21,
   },
 });

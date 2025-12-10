@@ -74,8 +74,8 @@ export const globalStyles = {
     elevation: 5,
   },
   buttonText: {
-    fontSize: 17,
-    fontWeight: '600' as const,
+    fontSize: 16,
+    fontWeight: '500' as const,
     color: '#ffffff',
     letterSpacing: 0.3,
   },
