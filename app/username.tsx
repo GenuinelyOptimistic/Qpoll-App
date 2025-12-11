@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import {
 	StyleSheet,
 	Text,
@@ -19,8 +19,14 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import { Colors } from "@/constants/theme";
 import { useThemeColor } from "@/hooks/use-theme-color";
 
-import { ThemedText } from "@/components/themed-text";
 import { globalStyles } from "./constants/global";
+
+//TODO: Add username availability check and error handling from databse
+//TODO: If user has already entered an invite code, do not show the "we'll text you" message
+//TODO: Test lottie animation performance on android devices
+//TODO: Improve accessibility labels and hints
+//TODO: Add analytics tracking for username creation events
+//TODO: IF a user gets and invite from someone greet them as that persons friend
 
 export default function CreateUsernameScreen() {
 	const router = useRouter();

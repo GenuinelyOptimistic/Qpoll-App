@@ -1,15 +1,19 @@
 {
   "expo": {
-    "name": "QPoll",
-    "slug": "QPoll",
+    "name": "steettalk",
+    "slug": "steettalk",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "qpoll",
+    "scheme": "steettalk",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.go.steettalk",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -43,6 +47,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "d9d6e0c4-da0a-4183-b65e-ff3cb1311687"
+      }
+    },
+    "owner": "GO"
   }
 }

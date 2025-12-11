@@ -74,101 +74,104 @@ export default function PhoneScreen() {
 	}, [isVerifying, countdown]);
 
 	const loginWithPhoneNumber = async () => {
-		router.push("/poll");
+		//TODO: Remove this code to enable phone auth
+		setIsVerifying(true);
 
-		if (!phoneNumber.trim()) {
-			alert("Please enter a valid phone number");
-			return;
-		}
+		// if (!phoneNumber.trim()) {
+		// 	alert("Please enter a valid phone number");
+		// 	return;
+		// }
 
-		try {
-			setLoading(true);
-			const formattedNumber = `+${callingCode}${phoneNumber.replace(
-				/[^0-9]/g,
-				""
-			)}`;
+		// try {
+		// 	setLoading(true);
+		// 	const formattedNumber = `+${callingCode}${phoneNumber.replace(
+		// 		/[^0-9]/g,
+		// 		""
+		// 	)}`;
 
-			// For development, completely bypass Firebase for test numbers
-			if (
-				__DEV__ &&
-				(formattedNumber === "+16505553434" ||
-					formattedNumber === "+1234567890")
-			) {
-				console.log(
-					"🎭 DEVELOPMENT MODE: Bypassing Firebase auth for test number:",
-					formattedNumber
-				);
-				// Simulate SMS sending delay
-				await new Promise((resolve) => setTimeout(resolve, 1500));
-				// Pre-fill verification code and show verification screen
-				setVerificationCode("123456");
-				setIsVerifying(true);
-				setLoading(false);
-				return;
-			}
+		// 	// For development, completely bypass Firebase for test numbers
+		// 	if (
+		// 		__DEV__ &&
+		// 		(formattedNumber === "+16505553434" ||
+		// 			formattedNumber === "+1234567890")
+		// 	) {
+		// 		console.log(
+		// 			"🎭 DEVELOPMENT MODE: Bypassing Firebase auth for test number:",
+		// 			formattedNumber
+		// 		);
+		// 		// Simulate SMS sending delay
+		// 		await new Promise((resolve) => setTimeout(resolve, 1500));
+		// 		// Pre-fill verification code and show verification screen
+		// 		setVerificationCode("123456");
+		// 		setIsVerifying(true);
+		// 		setLoading(false);
+		// 		return;
+		// 	}
 
-			console.log("📱 Sending SMS to:", formattedNumber);
-			const result = await auth().signInWithPhoneNumber(formattedNumber);
-			setConfirmationResult(result);
-			setIsVerifying(true);
-		} catch (error: any) {
-			console.error("❌ SMS Error:", error);
+		// 	console.log("📱 Sending SMS to:", formattedNumber);
+		// 	const result = await auth().signInWithPhoneNumber(formattedNumber);
+		// 	setConfirmationResult(result);
+		// 	setIsVerifying(true);
+		// } catch (error: any) {
+		// 	console.error("❌ SMS Error:", error);
 
-			// In development, if reCAPTCHA fails, show helpful message
-			if (__DEV__ && error.code === "auth/captcha-check-failed") {
-				alert(
-					"Development Mode: reCAPTCHA failed. Use test numbers +1 650-555-3434 or +1 234-567-890 with code 123456"
-				);
-				setLoading(false);
-				return;
-			}
+		// 	// In development, if reCAPTCHA fails, show helpful message
+		// 	if (__DEV__ && error.code === "auth/captcha-check-failed") {
+		// 		alert(
+		// 			"Development Mode: reCAPTCHA failed. Use test numbers +1 650-555-3434 or +1 234-567-890 with code 123456"
+		// 		);
+		// 		setLoading(false);
+		// 		return;
+		// 	}
 
-			let errorMessage =
-				"Error sending verification code. Please check your phone number and try again.";
+		// 	let errorMessage =
+		// 		"Error sending verification code. Please check your phone number and try again.";
 
-			// Handle specific Firebase auth errors
-			if (error.code === "auth/invalid-phone-number") {
-				errorMessage =
-					"Invalid phone number format. Please check and try again.";
-			} else if (error.code === "auth/missing-phone-number") {
-				errorMessage = "Phone number is required.";
-			} else if (error.code === "auth/too-many-requests") {
-				errorMessage =
-					"Too many requests. Please wait before trying again.";
-			} else if (error.code === "auth/quota-exceeded") {
-				errorMessage = "SMS quota exceeded. Please try again later.";
-			}
+		// 	// Handle specific Firebase auth errors
+		// 	if (error.code === "auth/invalid-phone-number") {
+		// 		errorMessage =
+		// 			"Invalid phone number format. Please check and try again.";
+		// 	} else if (error.code === "auth/missing-phone-number") {
+		// 		errorMessage = "Phone number is required.";
+		// 	} else if (error.code === "auth/too-many-requests") {
+		// 		errorMessage =
+		// 			"Too many requests. Please wait before trying again.";
+		// 	} else if (error.code === "auth/quota-exceeded") {
+		// 		errorMessage = "SMS quota exceeded. Please try again later.";
+		// 	}
 
-			alert(errorMessage);
-		} finally {
-			setLoading(false);
-		}
+		// 	alert(errorMessage);
+		// } finally {
+		// 	setLoading(false);
+		// }
 	};
 
 	const verifyCode = async (code: string) => {
-		try {
-			setLoading(true);
-
-			// For development test numbers, simulate successful verification
-			const formattedNumber = `+${callingCode}${phoneNumber.replace(
-				/[^0-9]/g,
-				""
-			)}`;
-
-			await confirmationResult.confirm(code);
-			const currentUser = auth().currentUser;
-			console.log("User UID:", currentUser?.uid);
-			// Move to username page after successful verification
-			if (currentUser) {
-				setIsVerifying(false);
-				router.push("/username");
-			}
-		} catch (error) {
-			console.error(error);
-			setVerificationWrong(true);
-		} finally {
-			setLoading(false);
+		if (code === "123456" && __DEV__) {
+			router.push("/username");
 		}
+		//TODO: Remove this code to enable phone auth
+		// try {
+		// 	setLoading(true);
+		// 	// For development test numbers, simulate successful verification
+		// 	const formattedNumber = `+${callingCode}${phoneNumber.replace(
+		// 		/[^0-9]/g,
+		// 		""
+		// 	)}`;
+		// 	await confirmationResult.confirm(code);
+		// 	const currentUser = auth().currentUser;
+		// 	console.log("User UID:", currentUser?.uid);
+		// 	// Move to username page after successful verification
+		// 	if (currentUser) {
+		// 		setIsVerifying(false);
+		// 		router.push("/username");
+		// 	}
+		// } catch (error) {
+		// 	console.error(error);
+		// 	setVerificationWrong(true);
+		// } finally {
+		// 	setLoading(false);
+		// }
 	};
 
 	const resendVerificationCode = async () => {
@@ -421,8 +424,8 @@ const styles = (colorScheme: "light" | "dark") =>
 			textDecorationLine: "underline",
 		},
 		errorText: {
-			color: "red",
-			marginTop: 10,
+			color: "#f94238",
+			marginBottom: 16,
 			textAlign: "center",
 		},
 		termsText: {
