@@ -41,6 +41,8 @@ export default function PollScreen() {
 	const [navMenuVisible, setNavMenuVisible] = useState<boolean>(false);
 	const position = useRef(new Animated.ValueXY()).current;
 	const rotateValue = useRef(new Animated.Value(0)).current;
+	const menuAnimation = useRef(new Animated.Value(0)).current;
+	const menuTranslateX = useRef(new Animated.Value(-SCREEN_WIDTH)).current;
 
 	const polls = useMemo(() => {
 		if (selectedCategories.length === 0) {
@@ -132,7 +134,7 @@ export default function PollScreen() {
 	const handleFlag = () => {
 		if (!currentPoll) return;
 		Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-		setMenuVisible(false);
+		closeMenu();
 
 		Alert.alert("Flag Poll", "Report this poll as inappropriate?", [
 			{ text: "Cancel", style: "cancel" },
@@ -149,7 +151,7 @@ export default function PollScreen() {
 
 	const handleEdit = () => {
 		if (!currentPoll) return;
-		setMenuVisible(false);
+		closeMenu();
 
 		if (!currentPoll.isOwner) {
 			Alert.alert("Cannot Edit", "You can only edit polls you created.");
@@ -168,7 +170,7 @@ export default function PollScreen() {
 
 	const handleShare = async () => {
 		if (!currentPoll) return;
-		setMenuVisible(false);
+		closeMenu();
 
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
@@ -218,9 +220,43 @@ export default function PollScreen() {
 		console.log("Creating new poll");
 	};
 
+	const closeMenu = () => {
+		Animated.parallel([
+			Animated.timing(menuAnimation, {
+				toValue: 0,
+				duration: 999,
+				useNativeDriver: true,
+			}),
+			Animated.timing(menuTranslateX, {
+				toValue: SCREEN_WIDTH,
+				duration: 999,
+				useNativeDriver: true,
+			}),
+		]).start(() => {
+			setMenuVisible(false);
+			menuTranslateX.setValue(-SCREEN_WIDTH);
+		});
+	};
+
 	const toggleMenu = () => {
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-		setMenuVisible(!menuVisible);
+		if (menuVisible) {
+			closeMenu();
+		} else {
+			setMenuVisible(true);
+			Animated.parallel([
+				Animated.timing(menuAnimation, {
+					toValue: 1,
+					duration: 200,
+					useNativeDriver: true,
+				}),
+				Animated.timing(menuTranslateX, {
+					toValue: 0,
+					duration: 200,
+					useNativeDriver: true,
+				}),
+			]).start();
+		}
 	};
 
 	const toggleNavMenu = () => {
@@ -423,11 +459,27 @@ export default function PollScreen() {
 
 			{menuVisible && (
 				<TouchableOpacity
-					style={styles(colorScheme).menuOverlay}
+					style={[
+						styles(colorScheme).menuOverlay,
+						{
+							opacity: menuAnimation.interpolate({
+								inputRange: [0, 1],
+								outputRange: [0, 0.3],
+							}),
+						},
+					]}
 					activeOpacity={1}
-					onPress={() => setMenuVisible(false)}
+					onPress={closeMenu}
 				>
-					<View style={styles(colorScheme).menuContainer}>
+					<View
+						style={[
+							styles(colorScheme).menuContainer,
+							{
+								transform: [{ translateX: menuTranslateX }],
+								opacity: menuAnimation,
+							},
+						]}
+					>
 						{currentPoll.isOwner && !currentPoll.hasResponses && (
 							<TouchableOpacity
 								style={styles(colorScheme).menuItem}

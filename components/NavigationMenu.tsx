@@ -1,15 +1,32 @@
 import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+	StyleSheet,
+	Text,
+	View,
+	TouchableOpacity,
+	ScrollView,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
 	ArrowLeft,
 	ChevronRight,
-	Bookmark,
-	Archive,
+	Heart,
 	Activity,
 	Bell,
-	TimerIcon,
+	UserCheck,
 	Lock,
 	Users,
+	Info,
+	FileText,
+	Globe,
+	HelpCircle,
+	Trash2,
+	Shield,
+	User,
+	Plus,
+	CreditCard,
+	Receipt,
+	LogOut,
 } from "lucide-react-native";
 import { Colors } from "@/constants/theme";
 
@@ -24,6 +41,8 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 	setNavMenuVisible,
 	colorScheme,
 }) => {
+	const insets = useSafeAreaInsets();
+
 	if (!navMenuVisible) return null;
 
 	return (
@@ -33,7 +52,10 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 			onPress={() => setNavMenuVisible(false)}
 		>
 			<TouchableOpacity
-				style={styles(colorScheme).navMenuContainer}
+				style={[
+					styles(colorScheme).navMenuContainer,
+					{ paddingTop: insets.top, paddingBottom: insets.bottom },
+				]}
 				activeOpacity={1}
 			>
 				<View style={styles(colorScheme).navMenuHeader}>
@@ -49,10 +71,13 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 					<View style={{ width: 40 }} />
 				</View>
 
-				<View style={styles(colorScheme).navMenuContent}>
+				<ScrollView
+					style={styles(colorScheme).navMenuContent}
+					showsVerticalScrollIndicator={false}
+				>
 					<View style={styles(colorScheme).navMenuSection}>
 						<Text style={styles(colorScheme).navSectionTitle}>
-							How you use Qpoll
+							How you use StreetTalk
 						</Text>
 
 						<TouchableOpacity
@@ -60,35 +85,14 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 							activeOpacity={0.7}
 						>
 							<View style={styles(colorScheme).navMenuItemLeft}>
-								<Bookmark
+								<UserCheck
 									size={20}
 									color={Colors[colorScheme].text}
 								/>
 								<Text
 									style={styles(colorScheme).navMenuItemText}
 								>
-									Saved
-								</Text>
-							</View>
-							<ChevronRight
-								size={20}
-								color={Colors[colorScheme].icon}
-							/>
-						</TouchableOpacity>
-
-						<TouchableOpacity
-							style={styles(colorScheme).navMenuItem}
-							activeOpacity={0.7}
-						>
-							<View style={styles(colorScheme).navMenuItemLeft}>
-								<Archive
-									size={20}
-									color={Colors[colorScheme].text}
-								/>
-								<Text
-									style={styles(colorScheme).navMenuItemText}
-								>
-									Archive
+									Following
 								</Text>
 							</View>
 							<ChevronRight
@@ -131,27 +135,6 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 									style={styles(colorScheme).navMenuItemText}
 								>
 									Notifications
-								</Text>
-							</View>
-							<ChevronRight
-								size={20}
-								color={Colors[colorScheme].icon}
-							/>
-						</TouchableOpacity>
-
-						<TouchableOpacity
-							style={styles(colorScheme).navMenuItem}
-							activeOpacity={0.7}
-						>
-							<View style={styles(colorScheme).navMenuItemLeft}>
-								<TimerIcon
-									size={20}
-									color={Colors[colorScheme].text}
-								/>
-								<Text
-									style={styles(colorScheme).navMenuItemText}
-								>
-									Time management
 								</Text>
 							</View>
 							<ChevronRight
@@ -206,7 +189,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 								<Text
 									style={styles(colorScheme).navMenuItemText}
 								>
-									Close Friends
+									Closed Groups
 								</Text>
 							</View>
 							<View style={styles(colorScheme).navMenuItemRight}>
@@ -222,7 +205,211 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 							</View>
 						</TouchableOpacity>
 					</View>
-				</View>
+
+					<View style={styles(colorScheme).navMenuSection}>
+						<Text style={styles(colorScheme).navSectionTitle}>
+							Help & Support
+						</Text>
+
+						<TouchableOpacity
+							style={styles(colorScheme).navMenuItem}
+							activeOpacity={0.7}
+						>
+							<View style={styles(colorScheme).navMenuItemLeft}>
+								<Info
+									size={20}
+									color={Colors[colorScheme].text}
+								/>
+								<Text
+									style={styles(colorScheme).navMenuItemText}
+								>
+									About
+								</Text>
+							</View>
+							<ChevronRight
+								size={20}
+								color={Colors[colorScheme].icon}
+							/>
+						</TouchableOpacity>
+
+						<TouchableOpacity
+							style={styles(colorScheme).navMenuItem}
+							activeOpacity={0.7}
+						>
+							<View style={styles(colorScheme).navMenuItemLeft}>
+								<Globe
+									size={20}
+									color={Colors[colorScheme].text}
+								/>
+								<Text
+									style={styles(colorScheme).navMenuItemText}
+								>
+									Blog
+								</Text>
+							</View>
+							<ChevronRight
+								size={20}
+								color={Colors[colorScheme].icon}
+							/>
+						</TouchableOpacity>
+
+						<TouchableOpacity
+							style={styles(colorScheme).navMenuItem}
+							activeOpacity={0.7}
+						>
+							<View style={styles(colorScheme).navMenuItemLeft}>
+								<HelpCircle
+									size={20}
+									color={Colors[colorScheme].text}
+								/>
+								<Text
+									style={styles(colorScheme).navMenuItemText}
+								>
+									Support
+								</Text>
+							</View>
+							<ChevronRight
+								size={20}
+								color={Colors[colorScheme].icon}
+							/>
+						</TouchableOpacity>
+					</View>
+
+					<View style={styles(colorScheme).navMenuSection}>
+						<Text style={styles(colorScheme).navSectionTitle}>
+							Legal
+						</Text>
+						<TouchableOpacity
+							style={styles(colorScheme).navMenuItem}
+							activeOpacity={0.7}
+						>
+							<View style={styles(colorScheme).navMenuItemLeft}>
+								<FileText
+									size={20}
+									color={Colors[colorScheme].text}
+								/>
+								<Text
+									style={styles(colorScheme).navMenuItemText}
+								>
+									Terms of Service
+								</Text>
+							</View>
+							<ChevronRight
+								size={20}
+								color={Colors[colorScheme].icon}
+							/>
+						</TouchableOpacity>
+
+						<TouchableOpacity
+							style={styles(colorScheme).navMenuItem}
+							activeOpacity={0.7}
+						>
+							<View style={styles(colorScheme).navMenuItemLeft}>
+								<FileText
+									size={20}
+									color={Colors[colorScheme].text}
+								/>
+								<Text
+									style={styles(colorScheme).navMenuItemText}
+								>
+									Privacy Policy
+								</Text>
+							</View>
+							<ChevronRight
+								size={20}
+								color={Colors[colorScheme].icon}
+							/>
+						</TouchableOpacity>
+					</View>
+					<View style={styles(colorScheme).navMenuSection}>
+						<Text style={styles(colorScheme).navSectionTitle}>
+							Paid Features
+						</Text>
+						<TouchableOpacity
+							style={styles(colorScheme).navMenuItem}
+							activeOpacity={0.7}
+						>
+							<View style={styles(colorScheme).navMenuItemLeft}>
+								<Shield
+									size={20}
+									color={Colors[colorScheme].text}
+								/>
+								<Text
+									style={styles(colorScheme).navMenuItemText}
+								>
+									Account Verification
+								</Text>
+							</View>
+							<ChevronRight
+								size={20}
+								color={Colors[colorScheme].icon}
+							/>
+						</TouchableOpacity>
+
+						<TouchableOpacity
+							style={styles(colorScheme).navMenuItem}
+							activeOpacity={0.7}
+						>
+							<View style={styles(colorScheme).navMenuItemLeft}>
+								<CreditCard
+									size={20}
+									color={Colors[colorScheme].text}
+								/>
+								<Text
+									style={styles(colorScheme).navMenuItemText}
+								>
+									Subscriptions
+								</Text>
+							</View>
+							<ChevronRight
+								size={20}
+								color={Colors[colorScheme].icon}
+							/>
+						</TouchableOpacity>
+					</View>
+
+					<View style={styles(colorScheme).navMenuSection}>
+						<Text style={styles(colorScheme).navSectionTitle}>
+							Account
+						</Text>
+						<TouchableOpacity
+							style={styles(colorScheme).navMenuItem}
+							activeOpacity={0.7}
+						>
+							<View style={styles(colorScheme).navMenuItemLeft}>
+								<User
+									size={20}
+									color={Colors[colorScheme].text}
+								/>
+								<Text
+									style={styles(colorScheme).navMenuItemText}
+								>
+									Manage Account
+								</Text>
+							</View>
+							<ChevronRight
+								size={20}
+								color={Colors[colorScheme].icon}
+							/>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={styles(colorScheme).navMenuItem}
+							activeOpacity={0.7}
+						>
+							<View style={styles(colorScheme).navMenuItemLeft}>
+								<LogOut size={20} color="red" />
+								<Text
+									style={[
+										styles(colorScheme).navMenuItemText,
+										{ color: "red" },
+									]}
+								>
+									Log Out
+								</Text>
+							</View>
+						</TouchableOpacity>
+					</View>
+				</ScrollView>
 			</TouchableOpacity>
 		</TouchableOpacity>
 	);
