@@ -291,7 +291,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 								<Text
 									style={styles(colorScheme).navMenuItemText}
 								>
-									Terms of Service
+									Terms of Use
 								</Text>
 							</View>
 							<ChevronRight

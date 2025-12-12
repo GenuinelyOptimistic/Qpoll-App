@@ -64,13 +64,13 @@ export default function CreateUsernameScreen() {
 
 	const handleSkip = () => {
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-		router.push("/poll");
+		router.push("/(main)");
 	};
 
 	const handleSignUp = () => {
 		if (!isValid) return;
 		else if (showSuccess) {
-			router.push("/poll");
+			router.push("/(main)");
 			return;
 		}
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
