@@ -210,10 +210,6 @@ export default function PollScreen() {
 		console.log(`Voted for option ${optionId} in poll ${currentPoll.id}`);
 	};
 
-	const handleBack = () => {
-		router.back();
-	};
-
 	const handleCreatePoll = () => {
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 		router.push("/create-poll");
@@ -287,12 +283,6 @@ export default function PollScreen() {
 	return (
 		<View style={styles(colorScheme).container}>
 			<SafeAreaView edges={["top"]} style={styles(colorScheme).header}>
-				<TouchableOpacity
-					style={styles(colorScheme).headerButton}
-					onPress={handleBack}
-				>
-					<ArrowLeft size={24} color={Colors[colorScheme].text} />
-				</TouchableOpacity>
 				<View style={styles(colorScheme).pointsContainer}>
 					<Text style={styles(colorScheme).pointsNumber}>5</Text>
 					<Text style={styles(colorScheme).pointsLabel}>points</Text>
