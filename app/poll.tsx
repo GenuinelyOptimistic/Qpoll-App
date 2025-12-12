@@ -15,10 +15,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import {
 	Heart,
 	MoreVertical,
-	ArrowLeft,
 	Check,
 	Clock,
 	Plus,
+	Menu,
 } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
@@ -26,6 +26,7 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import { Colors } from "@/constants/theme";
 import { mockPolls, Poll, PollOption } from "./mocks/polls";
 import { useCategories } from "./context/CategoryContext";
+import { NavigationMenu } from "@/components/NavigationMenu";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.25;
@@ -37,6 +38,7 @@ export default function PollScreen() {
 	const [currentIndex, setCurrentIndex] = useState<number>(0);
 	const [allPolls, setAllPolls] = useState<Poll[]>(mockPolls);
 	const [menuVisible, setMenuVisible] = useState<boolean>(false);
+	const [navMenuVisible, setNavMenuVisible] = useState<boolean>(false);
 	const position = useRef(new Animated.ValueXY()).current;
 	const rotateValue = useRef(new Animated.Value(0)).current;
 
@@ -221,6 +223,11 @@ export default function PollScreen() {
 		setMenuVisible(!menuVisible);
 	};
 
+	const toggleNavMenu = () => {
+		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+		setNavMenuVisible(!navMenuVisible);
+	};
+
 	if (!isLoaded) {
 		return (
 			<SafeAreaView style={styles(colorScheme).container}>
@@ -283,11 +290,17 @@ export default function PollScreen() {
 	return (
 		<View style={styles(colorScheme).container}>
 			<SafeAreaView edges={["top"]} style={styles(colorScheme).header}>
+				<View style={styles(colorScheme).headerButton} />
 				<View style={styles(colorScheme).pointsContainer}>
 					<Text style={styles(colorScheme).pointsNumber}>5</Text>
 					<Text style={styles(colorScheme).pointsLabel}>points</Text>
 				</View>
-				<View style={styles(colorScheme).headerButton} />
+				<TouchableOpacity
+					style={styles(colorScheme).headerButton}
+					onPress={toggleNavMenu}
+				>
+					<Menu size={24} color={Colors[colorScheme].text} />
+				</TouchableOpacity>
 			</SafeAreaView>
 
 			<View style={styles(colorScheme).cardContainer}>
@@ -455,6 +468,12 @@ export default function PollScreen() {
 					</View>
 				</TouchableOpacity>
 			)}
+
+			<NavigationMenu
+				navMenuVisible={navMenuVisible}
+				setNavMenuVisible={setNavMenuVisible}
+				colorScheme={colorScheme}
+			/>
 		</View>
 	);
 }
