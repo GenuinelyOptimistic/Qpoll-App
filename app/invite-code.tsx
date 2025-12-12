@@ -62,6 +62,9 @@ export default function PhoneScreen() {
 				</Text>
 				<View style={globalStyles(colorScheme).inputContainer}>
 					<TextInput
+						autoCorrect={false}
+						autoComplete="off"
+						spellCheck={false}
 						style={globalStyles(colorScheme).input}
 						value={inviteCode}
 						onChangeText={(text) =>
