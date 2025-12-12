@@ -22,6 +22,8 @@ import {
 } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
+import { useColorScheme } from "@/hooks/use-color-scheme";
+import { Colors } from "@/constants/theme";
 import { mockPolls, Poll, PollOption } from "./mocks/polls";
 import { useCategories } from "./context/CategoryContext";
 
@@ -31,6 +33,7 @@ const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.25;
 export default function PollScreen() {
 	const router = useRouter();
 	const { selectedCategories, isLoaded } = useCategories();
+	const colorScheme = useColorScheme() ?? "light";
 	const [currentIndex, setCurrentIndex] = useState<number>(0);
 	const [allPolls, setAllPolls] = useState<Poll[]>(mockPolls);
 	const [menuVisible, setMenuVisible] = useState<boolean>(false);
@@ -224,9 +227,11 @@ export default function PollScreen() {
 
 	if (!isLoaded) {
 		return (
-			<SafeAreaView style={styles.container}>
-				<View style={styles.emptyContainer}>
-					<Text style={styles.emptyText}>Loading...</Text>
+			<SafeAreaView style={styles(colorScheme).container}>
+				<View style={styles(colorScheme).emptyContainer}>
+					<Text style={styles(colorScheme).emptyText}>
+						Loading...
+					</Text>
 				</View>
 			</SafeAreaView>
 		);
@@ -234,9 +239,9 @@ export default function PollScreen() {
 
 	if (!currentPoll) {
 		return (
-			<SafeAreaView style={styles.container}>
-				<View style={styles.emptyContainer}>
-					<Text style={styles.emptyText}>
+			<SafeAreaView style={styles(colorScheme).container}>
+				<View style={styles(colorScheme).emptyContainer}>
+					<Text style={styles(colorScheme).emptyText}>
 						{selectedCategories.length > 0
 							? "No polls in selected categories"
 							: "No more polls!"}
@@ -280,64 +285,71 @@ export default function PollScreen() {
 	};
 
 	return (
-		<View style={styles.container}>
-			<SafeAreaView edges={["top"]} style={styles.header}>
+		<View style={styles(colorScheme).container}>
+			<SafeAreaView edges={["top"]} style={styles(colorScheme).header}>
 				<TouchableOpacity
-					style={styles.headerButton}
+					style={styles(colorScheme).headerButton}
 					onPress={handleBack}
 				>
-					<ArrowLeft size={24} color="#1a1a1a" />
+					<ArrowLeft size={24} color={Colors[colorScheme].text} />
 				</TouchableOpacity>
-				<View style={styles.pointsContainer}>
-					<Text style={styles.pointsNumber}>5</Text>
-					<Text style={styles.pointsLabel}>points</Text>
+				<View style={styles(colorScheme).pointsContainer}>
+					<Text style={styles(colorScheme).pointsNumber}>5</Text>
+					<Text style={styles(colorScheme).pointsLabel}>points</Text>
 				</View>
-				<View style={styles.headerButton} />
+				<View style={styles(colorScheme).headerButton} />
 			</SafeAreaView>
 
-			<View style={styles.cardContainer}>
+			<View style={styles(colorScheme).cardContainer}>
 				{nextCard && (
 					<Animated.View
 						style={[
-							styles.card,
-							styles.nextCard,
+							styles(colorScheme).card,
+							styles(colorScheme).nextCard,
 							{
 								transform: [{ scale: nextCardScale }],
 							},
 						]}
 					>
-						<Text style={styles.questionText}>
+						<Text style={styles(colorScheme).questionText}>
 							{nextCard.question}
 						</Text>
 					</Animated.View>
 				)}
 
 				<Animated.View
-					style={[styles.card, cardStyle]}
+					style={[styles(colorScheme).card, cardStyle]}
 					{...panResponder.panHandlers}
 				>
-					<View style={styles.cardContent}>
-						<View style={styles.pollHeader}>
-							<View style={styles.pollHeaderTop}>
-								<View style={styles.pollHeaderLeft}>
-									<Text style={styles.questionText}>
+					<View style={styles(colorScheme).cardContent}>
+						<View style={styles(colorScheme).pollHeader}>
+							<View style={styles(colorScheme).pollHeaderTop}>
+								<View
+									style={styles(colorScheme).pollHeaderLeft}
+								>
+									<Text
+										style={styles(colorScheme).questionText}
+									>
 										{currentPoll.question}
 									</Text>
 								</View>
 								<TouchableOpacity
-									style={styles.menuButton}
+									style={styles(colorScheme).menuButton}
 									onPress={toggleMenu}
 									activeOpacity={0.7}
 								>
-									<MoreVertical size={20} color="#666" />
+									<MoreVertical
+										size={20}
+										color={Colors[colorScheme].icon}
+									/>
 								</TouchableOpacity>
 							</View>
-							<Text style={styles.pollMeta}>
+							<Text style={styles(colorScheme).pollMeta}>
 								{currentPoll.votes} votes · Vote to see results
 							</Text>
 						</View>
 
-						<View style={styles.optionsContainer}>
+						<View style={styles(colorScheme).optionsContainer}>
 							{getSortedOptions(currentPoll).map(
 								(option, index) => (
 									<PollOptionCard
@@ -353,15 +365,18 @@ export default function PollScreen() {
 							)}
 						</View>
 
-						<View style={styles.pollFooter}>
-							<View style={styles.footerItem}>
-								<Clock size={14} color="#999" />
-								<Text style={styles.footerText}>
+						<View style={styles(colorScheme).pollFooter}>
+							<View style={styles(colorScheme).footerItem}>
+								<Clock
+									size={14}
+									color={Colors[colorScheme].icon}
+								/>
+								<Text style={styles(colorScheme).footerText}>
 									{currentPoll.timeLeft}
 								</Text>
 							</View>
-							<View style={styles.footerItem}>
-								<Text style={styles.footerText}>
+							<View style={styles(colorScheme).footerItem}>
+								<Text style={styles(colorScheme).footerText}>
 									{currentPoll.votingType}
 								</Text>
 							</View>
@@ -370,10 +385,16 @@ export default function PollScreen() {
 				</Animated.View>
 			</View>
 
-			<SafeAreaView edges={["bottom"]} style={styles.actionsContainer}>
-				<View style={styles.actions}>
+			<SafeAreaView
+				edges={["bottom"]}
+				style={styles(colorScheme).actionsContainer}
+			>
+				<View style={styles(colorScheme).actions}>
 					<TouchableOpacity
-						style={[styles.actionButton, styles.heartButton]}
+						style={[
+							styles(colorScheme).actionButton,
+							styles(colorScheme).heartButton,
+						]}
 						onPress={handleLike}
 						activeOpacity={0.7}
 					>
@@ -385,7 +406,10 @@ export default function PollScreen() {
 					</TouchableOpacity>
 
 					<TouchableOpacity
-						style={[styles.actionButton, styles.createButton]}
+						style={[
+							styles(colorScheme).actionButton,
+							styles(colorScheme).createButton,
+						]}
 						onPress={handleCreatePoll}
 						activeOpacity={0.7}
 					>
@@ -396,38 +420,43 @@ export default function PollScreen() {
 
 			{menuVisible && (
 				<TouchableOpacity
-					style={styles.menuOverlay}
+					style={styles(colorScheme).menuOverlay}
 					activeOpacity={1}
 					onPress={() => setMenuVisible(false)}
 				>
-					<View style={styles.menuContainer}>
+					<View style={styles(colorScheme).menuContainer}>
 						{currentPoll.isOwner && !currentPoll.hasResponses && (
 							<TouchableOpacity
-								style={styles.menuItem}
+								style={styles(colorScheme).menuItem}
 								onPress={handleEdit}
 								activeOpacity={0.7}
 							>
-								<Text style={styles.menuItemText}>
+								<Text style={styles(colorScheme).menuItemText}>
 									Edit Poll
 								</Text>
 							</TouchableOpacity>
 						)}
 						<TouchableOpacity
-							style={styles.menuItem}
+							style={styles(colorScheme).menuItem}
 							onPress={handleShare}
 							activeOpacity={0.7}
 						>
-							<Text style={styles.menuItemText}>Share Poll</Text>
+							<Text style={styles(colorScheme).menuItemText}>
+								Share Poll
+							</Text>
 						</TouchableOpacity>
 						<TouchableOpacity
-							style={[styles.menuItem, styles.menuItemLast]}
+							style={[
+								styles(colorScheme).menuItem,
+								styles(colorScheme).menuItemLast,
+							]}
 							onPress={handleFlag}
 							activeOpacity={0.7}
 						>
 							<Text
 								style={[
-									styles.menuItemText,
-									styles.menuItemDanger,
+									styles(colorScheme).menuItemText,
+									styles(colorScheme).menuItemDanger,
 								]}
 							>
 								Flag Poll
@@ -457,25 +486,27 @@ const PollOptionCard: React.FC<PollOptionCardProps> = ({
 	onVote,
 	votingType,
 }) => {
+	const colorScheme = useColorScheme() ?? "light";
 	const percentage =
 		totalVotes > 0 ? Math.round((option.votes / totalVotes) * 100) : 0;
 
 	const getBackgroundColor = () => {
-		if (!showResults) return "#F5F5F5";
+		if (!showResults) return colorScheme === "dark" ? "#1b1d1f" : "#F5F5F5";
 		if (rank === 0) return "#E9FFEA";
 		if (rank === 1) return "#9DBEFF";
 		return "#E0E0E0";
 	};
 
 	const getBorderColor = () => {
-		if (!showResults) return "#F5F5F5";
+		if (!showResults)
+			return colorScheme === "dark" ? "#161616ff" : "#F5F5F5";
 		if (rank === 0) return "#95CD9C";
 		if (rank === 1) return "#3278FF";
 		return "#E0E0E0";
 	};
 
 	const getTextColor = () => {
-		if (!showResults) return "#1a1a1a";
+		if (!showResults) return colorScheme === "dark" ? "#e0e0e0" : "#000101";
 		if (rank === 0 || rank === 1) return "#272c2e";
 		return "#4f5354";
 	};
@@ -483,7 +514,7 @@ const PollOptionCard: React.FC<PollOptionCardProps> = ({
 	return (
 		<TouchableOpacity
 			style={[
-				styles.optionCard,
+				styles(colorScheme).optionCard,
 				{
 					backgroundColor: getBackgroundColor(),
 					borderColor: getBorderColor(),
@@ -493,23 +524,28 @@ const PollOptionCard: React.FC<PollOptionCardProps> = ({
 			activeOpacity={0.7}
 			disabled={showResults}
 		>
-			<View style={styles.optionContent}>
+			<View style={styles(colorScheme).optionContent}>
 				{showResults && rank === 0 && (
-					<View style={styles.checkIconContainer}>
+					<View style={styles(colorScheme).checkIconContainer}>
 						<Check size={16} color="#6DD079" strokeWidth={3} />
 					</View>
 				)}
-				<Text style={[styles.optionText, { color: getTextColor() }]}>
+				<Text
+					style={[
+						styles(colorScheme).optionText,
+						{ color: getTextColor() },
+					]}
+				>
 					{option.text}
 				</Text>
 			</View>
 
 			{showResults && (
-				<View style={styles.optionRight}>
+				<View style={styles(colorScheme).optionRight}>
 					{votingType === "Open Voting" &&
 						option.avatars &&
 						option.avatars.length > 0 && (
-							<View style={styles.avatarsContainer}>
+							<View style={styles(colorScheme).avatarsContainer}>
 								{option.avatars
 									.slice(0, 2)
 									.map((avatar, idx) => (
@@ -517,8 +553,10 @@ const PollOptionCard: React.FC<PollOptionCardProps> = ({
 											key={idx}
 											source={{ uri: avatar }}
 											style={[
-												styles.avatar,
-												idx > 0 && styles.avatarOverlap,
+												styles(colorScheme).avatar,
+												idx > 0 &&
+													styles(colorScheme)
+														.avatarOverlap,
 											]}
 										/>
 									))}
@@ -526,7 +564,7 @@ const PollOptionCard: React.FC<PollOptionCardProps> = ({
 						)}
 					<Text
 						style={[
-							styles.percentageText,
+							styles(colorScheme).percentageText,
 							{ color: getTextColor() },
 						]}
 					>
@@ -538,287 +576,287 @@ const PollOptionCard: React.FC<PollOptionCardProps> = ({
 	);
 };
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "#f8f9fa",
-	},
-	header: {
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-between",
-		paddingHorizontal: 20,
-		paddingVertical: 12,
-		backgroundColor: "#f8f9fa",
-	},
-	headerButton: {
-		width: 40,
-		height: 40,
-		alignItems: "center",
-		justifyContent: "center",
-	},
-	pointsContainer: {
-		flexDirection: "row",
-		alignItems: "baseline",
-		gap: 4,
-	},
-	pointsNumber: {
-		fontSize: 24,
-		fontWeight: "700",
-		color: "#5B93FF",
-	},
-	pointsLabel: {
-		fontSize: 16,
-		fontWeight: "500",
-		color: "#5B93FF",
-	},
-	cardContainer: {
-		flex: 1,
-		alignItems: "center",
-		justifyContent: "center",
-		paddingHorizontal: 20,
-	},
-	card: {
-		position: "absolute",
-		width: SCREEN_WIDTH - 40,
-		maxHeight: SCREEN_HEIGHT * 0.7,
-		backgroundColor: "#ffffff",
-		borderRadius: 24,
-		padding: 24,
-		shadowColor: "#000",
-		shadowOffset: {
-			width: 0,
-			height: 8,
+const styles = (colorScheme: "light" | "dark") =>
+	StyleSheet.create({
+		container: {
+			flex: 1,
+			backgroundColor: Colors[colorScheme].background,
 		},
-		shadowOpacity: 0.12,
-		shadowRadius: 16,
-		elevation: 8,
-	},
-	nextCard: {
-		opacity: 0.6,
-		zIndex: 0,
-	},
-	cardContent: {
-		flex: 1,
-		gap: 20,
-	},
-	pollHeader: {
-		gap: 8,
-	},
-	pollHeaderTop: {
-		flexDirection: "row",
-		alignItems: "flex-start",
-		justifyContent: "space-between",
-		gap: 12,
-	},
-	pollHeaderLeft: {
-		flex: 1,
-	},
-	menuButton: {
-		width: 32,
-		height: 32,
-		alignItems: "center",
-		justifyContent: "center",
-		borderRadius: 16,
-		backgroundColor: "#F5F5F5",
-	},
-	questionText: {
-		fontSize: 20,
-		fontWeight: "700",
-		color: "#1a1a1a",
-		lineHeight: 28,
-	},
-	pollMeta: {
-		fontSize: 13,
-		color: "#999",
-		fontWeight: "500",
-	},
-	optionsContainer: {
-		gap: 12,
-		flex: 1,
-	},
-	optionCard: {
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-between",
-		paddingVertical: 16,
-		paddingHorizontal: 20,
-		borderRadius: 30,
-		minHeight: 32,
-		borderWidth: 1,
-	},
-	optionContent: {
-		flexDirection: "row",
-		alignItems: "center",
-		gap: 8,
-		flex: 1,
-	},
-	checkIconContainer: {
-		width: 24,
-		height: 24,
-		borderRadius: 12,
-		backgroundColor: "rgba(255, 255, 255, 0.5)",
-		alignItems: "center",
-		justifyContent: "center",
-	},
-	optionText: {
-		fontSize: 16,
-		fontWeight: "600",
-		flex: 1,
-	},
-	optionRight: {
-		flexDirection: "row",
-		alignItems: "center",
-		gap: 8,
-	},
-	avatarsContainer: {
-		flexDirection: "row",
-		alignItems: "center",
-	},
-	avatar: {
-		width: 24,
-		height: 24,
-		borderRadius: 12,
-		borderWidth: 2,
-		borderColor: "#FFFFFF",
-	},
-	avatarOverlap: {
-		marginLeft: -8,
-	},
-	percentageText: {
-		fontSize: 15,
-		fontWeight: "700",
-		minWidth: 40,
-		textAlign: "right",
-	},
-	pollFooter: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
-		paddingTop: 8,
-		borderTopWidth: 1,
-		borderTopColor: "#F0F0F0",
-	},
-	footerItem: {
-		flexDirection: "row",
-		alignItems: "center",
-		gap: 4,
-	},
-	footerText: {
-		fontSize: 12,
-		color: "#999",
-		fontWeight: "500",
-	},
+		header: {
+			flexDirection: "row",
+			alignItems: "center",
+			justifyContent: "space-between",
+			paddingHorizontal: 20,
+			paddingVertical: 12,
+			backgroundColor: Colors[colorScheme].background,
+		},
+		headerButton: {
+			width: 40,
+			height: 40,
+			alignItems: "center",
+			justifyContent: "center",
+		},
+		pointsContainer: {
+			flexDirection: "row",
+			alignItems: "baseline",
+			gap: 4,
+		},
+		pointsNumber: {
+			fontSize: 24,
+			fontWeight: "700",
+			color: "#5B93FF",
+		},
+		pointsLabel: {
+			fontSize: 16,
+			fontWeight: "500",
+			color: "#5B93FF",
+		},
+		cardContainer: {
+			flex: 1,
+			alignItems: "center",
+			justifyContent: "center",
+			paddingHorizontal: 20,
+		},
+		card: {
+			position: "absolute",
+			width: SCREEN_WIDTH - 40,
+			maxHeight: SCREEN_HEIGHT * 0.7,
+			backgroundColor: colorScheme === "dark" ? "#2a2a2a" : "#ffffff",
+			borderRadius: 24,
+			padding: 24,
+			shadowColor: "#000",
+			shadowOffset: {
+				width: 0,
+				height: 8,
+			},
+			shadowOpacity: 0.12,
+			shadowRadius: 16,
+			elevation: 8,
+		},
+		nextCard: {
+			opacity: 0.6,
+			zIndex: 0,
+		},
+		cardContent: {
+			flex: 1,
+			gap: 20,
+		},
+		pollHeader: {
+			gap: 8,
+		},
+		pollHeaderTop: {
+			flexDirection: "row",
+			alignItems: "flex-start",
+			justifyContent: "space-between",
+			gap: 12,
+		},
+		pollHeaderLeft: {
+			flex: 1,
+		},
+		menuButton: {
+			width: 32,
+			height: 32,
+			alignItems: "center",
+			justifyContent: "center",
+			borderRadius: 16,
+		},
+		questionText: {
+			fontSize: 20,
+			fontWeight: "700",
+			color: Colors[colorScheme].text,
+			lineHeight: 28,
+		},
+		pollMeta: {
+			fontSize: 13,
+			color: Colors[colorScheme].icon,
+			fontWeight: "500",
+		},
+		optionsContainer: {
+			gap: 12,
+			flex: 1,
+		},
+		optionCard: {
+			flexDirection: "row",
+			alignItems: "center",
+			justifyContent: "space-between",
+			paddingVertical: 16,
+			paddingHorizontal: 20,
+			borderRadius: 30,
+			minHeight: 32,
+			borderWidth: 1,
+		},
+		optionContent: {
+			flexDirection: "row",
+			alignItems: "center",
+			gap: 8,
+			flex: 1,
+		},
+		checkIconContainer: {
+			width: 24,
+			height: 24,
+			borderRadius: 12,
+			backgroundColor: "rgba(255, 255, 255, 0.5)",
+			alignItems: "center",
+			justifyContent: "center",
+		},
+		optionText: {
+			fontSize: 16,
+			fontWeight: "500",
+			flex: 1,
+		},
+		optionRight: {
+			flexDirection: "row",
+			alignItems: "center",
+			gap: 8,
+		},
+		avatarsContainer: {
+			flexDirection: "row",
+			alignItems: "center",
+		},
+		avatar: {
+			width: 24,
+			height: 24,
+			borderRadius: 12,
+			borderWidth: 2,
+			borderColor: "#FFFFFF",
+		},
+		avatarOverlap: {
+			marginLeft: -8,
+		},
+		percentageText: {
+			fontSize: 15,
+			fontWeight: "700",
+			minWidth: 40,
+			textAlign: "right",
+		},
+		pollFooter: {
+			flexDirection: "row",
+			justifyContent: "space-between",
+			alignItems: "center",
+			paddingTop: 8,
+			borderTopWidth: 1,
+			borderTopColor: Colors[colorScheme].border,
+		},
+		footerItem: {
+			flexDirection: "row",
+			alignItems: "center",
+			gap: 4,
+		},
+		footerText: {
+			fontSize: 12,
+			color: Colors[colorScheme].icon,
+			fontWeight: "500",
+		},
 
-	actionsContainer: {
-		backgroundColor: "#f8f9fa",
-		paddingTop: 8,
-	},
-	actions: {
-		flexDirection: "row",
-		justifyContent: "center",
-		alignItems: "center",
-		paddingHorizontal: 32,
-		paddingBottom: 16,
-		gap: 24,
-	},
-	actionButton: {
-		width: 56,
-		height: 56,
-		borderRadius: 28,
-		backgroundColor: "#ffffff",
-		alignItems: "center",
-		justifyContent: "center",
-		shadowColor: "#000",
-		shadowOffset: {
-			width: 0,
-			height: 2,
+		actionsContainer: {
+			backgroundColor: Colors[colorScheme].background,
+			paddingTop: 8,
 		},
-		shadowOpacity: 0.08,
-		shadowRadius: 8,
-		elevation: 3,
-	},
-	actionButtonActive: {
-		backgroundColor: "#E8F1FF",
-	},
-	heartButton: {
-		width: 64,
-		height: 64,
-		borderRadius: 32,
-		backgroundColor: "#fff",
-		shadowColor: "#FF4458",
-		shadowOffset: {
-			width: 0,
-			height: 4,
+		actions: {
+			flexDirection: "row",
+			justifyContent: "center",
+			alignItems: "center",
+			paddingHorizontal: 32,
+			paddingBottom: 16,
+			gap: 24,
 		},
-		shadowOpacity: 0.15,
-		shadowRadius: 12,
-		elevation: 5,
-	},
-	createButton: {
-		width: 64,
-		height: 64,
-		borderRadius: 32,
-		backgroundColor: "#5B93FF",
-		shadowColor: "#5B93FF",
-		shadowOffset: {
-			width: 0,
-			height: 4,
+		actionButton: {
+			width: 56,
+			height: 56,
+			borderRadius: 28,
+			backgroundColor: Colors[colorScheme].background,
+			alignItems: "center",
+			justifyContent: "center",
+			shadowColor: "#000",
+			shadowOffset: {
+				width: 0,
+				height: 2,
+			},
+			shadowOpacity: 0.08,
+			shadowRadius: 8,
+			elevation: 3,
 		},
-		shadowOpacity: 0.3,
-		shadowRadius: 12,
-		elevation: 5,
-	},
-	menuOverlay: {
-		position: "absolute",
-		top: 0,
-		left: 0,
-		right: 0,
-		bottom: 0,
-		backgroundColor: "rgba(0, 0, 0, 0.3)",
-		justifyContent: "center",
-		alignItems: "center",
-	},
-	menuContainer: {
-		backgroundColor: "#ffffff",
-		borderRadius: 16,
-		marginHorizontal: 40,
-		overflow: "hidden",
-		shadowColor: "#000",
-		shadowOffset: {
-			width: 0,
-			height: 8,
+		actionButtonActive: {
+			backgroundColor: "#E8F1FF",
 		},
-		shadowOpacity: 0.2,
-		shadowRadius: 16,
-		elevation: 10,
-	},
-	menuItem: {
-		paddingVertical: 18,
-		paddingHorizontal: 24,
-		borderBottomWidth: 1,
-		borderBottomColor: "#F0F0F0",
-	},
-	menuItemLast: {
-		borderBottomWidth: 0,
-	},
-	menuItemText: {
-		fontSize: 17,
-		fontWeight: "600",
-		color: "#1a1a1a",
-		textAlign: "center",
-	},
-	menuItemDanger: {
-		color: "#FF4458",
-	},
-	emptyContainer: {
-		flex: 1,
-		alignItems: "center",
-		justifyContent: "center",
-	},
-	emptyText: {
-		fontSize: 20,
-		fontWeight: "600",
-		color: "#999",
-	},
-});
+		heartButton: {
+			width: 64,
+			height: 64,
+			borderRadius: 32,
+			backgroundColor: colorScheme == "dark" ? "#331313" : "#ffffff",
+			shadowColor: "#FF4458",
+			shadowOffset: {
+				width: 0,
+				height: 4,
+			},
+			shadowOpacity: colorScheme == "dark" ? 0 : 0.15,
+			shadowRadius: 12,
+			elevation: colorScheme == "dark" ? 0 : 5,
+		},
+		createButton: {
+			width: 64,
+			height: 64,
+			borderRadius: 32,
+			backgroundColor: "#5B93FF",
+			shadowColor: "#5B93FF",
+			shadowOffset: {
+				width: 0,
+				height: 4,
+			},
+			shadowOpacity: 0.3,
+			shadowRadius: 12,
+			elevation: 5,
+		},
+		menuOverlay: {
+			position: "absolute",
+			top: 0,
+			left: 0,
+			right: 0,
+			bottom: 0,
+			backgroundColor: "rgba(0, 0, 0, 0.3)",
+			justifyContent: "center",
+			alignItems: "center",
+		},
+		menuContainer: {
+			backgroundColor: Colors[colorScheme].background,
+			borderRadius: 16,
+			marginHorizontal: 40,
+			overflow: "hidden",
+			shadowColor: "#000",
+			shadowOffset: {
+				width: 0,
+				height: 8,
+			},
+			shadowOpacity: 0.2,
+			shadowRadius: 16,
+			elevation: 10,
+		},
+		menuItem: {
+			paddingVertical: 18,
+			paddingHorizontal: 24,
+			borderBottomWidth: 1,
+			borderBottomColor: Colors[colorScheme].border,
+		},
+		menuItemLast: {
+			borderBottomWidth: 0,
+		},
+		menuItemText: {
+			fontSize: 17,
+			fontWeight: "600",
+			color: Colors[colorScheme].text,
+			textAlign: "center",
+		},
+		menuItemDanger: {
+			color: "#FF4458",
+		},
+		emptyContainer: {
+			flex: 1,
+			alignItems: "center",
+			justifyContent: "center",
+		},
+		emptyText: {
+			fontSize: 20,
+			fontWeight: "600",
+			color: Colors[colorScheme].icon,
+		},
+	});
