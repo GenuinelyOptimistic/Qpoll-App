@@ -87,7 +87,9 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 							activeOpacity={0.7}
 							onPress={() => {
 								setNavMenuVisible(false);
-								router.push("/settings/following");
+								router.push(
+									"/settings/following?fromMenu=true"
+								);
 							}}
 						>
 							<View style={styles(colorScheme).navMenuItemLeft}>
@@ -112,7 +114,9 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 							activeOpacity={0.7}
 							onPress={() => {
 								setNavMenuVisible(false);
-								router.push("/settings/your-activity");
+								router.push(
+									"/settings/your-activity?fromMenu=true"
+								);
 							}}
 						>
 							<View style={styles(colorScheme).navMenuItemLeft}>
@@ -137,7 +141,9 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 							activeOpacity={0.7}
 							onPress={() => {
 								setNavMenuVisible(false);
-								router.push("/settings/notifications");
+								router.push(
+									"/settings/notifications?fromMenu=true"
+								);
 							}}
 						>
 							<View style={styles(colorScheme).navMenuItemLeft}>
@@ -168,7 +174,9 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 							activeOpacity={0.7}
 							onPress={() => {
 								setNavMenuVisible(false);
-								router.push("/settings/account-privacy");
+								router.push(
+									"/settings/account-privacy?fromMenu=true"
+								);
 							}}
 						>
 							<View style={styles(colorScheme).navMenuItemLeft}>
@@ -200,7 +208,9 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 							activeOpacity={0.7}
 							onPress={() => {
 								setNavMenuVisible(false);
-								router.push("/settings/closed-groups");
+								router.push(
+									"/settings/closed-groups?fromMenu=true"
+								);
 							}}
 						>
 							<View style={styles(colorScheme).navMenuItemLeft}>
@@ -238,7 +248,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 							activeOpacity={0.7}
 							onPress={() => {
 								setNavMenuVisible(false);
-								router.push("/settings/about");
+								router.push("/settings/about?fromMenu=true");
 							}}
 						>
 							<View style={styles(colorScheme).navMenuItemLeft}>
@@ -284,7 +294,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 							activeOpacity={0.7}
 							onPress={() => {
 								setNavMenuVisible(false);
-								router.push("/settings/support");
+								router.push("/settings/support?fromMenu=true");
 							}}
 						>
 							<View style={styles(colorScheme).navMenuItemLeft}>
@@ -360,7 +370,9 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 							activeOpacity={0.7}
 							onPress={() => {
 								setNavMenuVisible(false);
-								router.push("/settings/account-verification");
+								router.push(
+									"/settings/account-verification?fromMenu=true"
+								);
 							}}
 						>
 							<View style={styles(colorScheme).navMenuItemLeft}>
@@ -385,7 +397,9 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 							activeOpacity={0.7}
 							onPress={() => {
 								setNavMenuVisible(false);
-								router.push("/settings/subscriptions");
+								router.push(
+									"/settings/subscriptions?fromMenu=true"
+								);
 							}}
 						>
 							<View style={styles(colorScheme).navMenuItemLeft}>
@@ -415,7 +429,9 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 							activeOpacity={0.7}
 							onPress={() => {
 								setNavMenuVisible(false);
-								router.push("/settings/manage-account");
+								router.push(
+									"/settings/manage-account?fromMenu=true"
+								);
 							}}
 						>
 							<View style={styles(colorScheme).navMenuItemLeft}>

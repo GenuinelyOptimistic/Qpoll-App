@@ -17,13 +17,17 @@ export default function About() {
 	const router = useRouter();
 	const colorScheme = useColorScheme() ?? "light";
 
+	const handleBack = () => {
+		router.back();
+	};
+
 	return (
 		<View
 			style={[styles(colorScheme).container, { paddingTop: insets.top }]}
 		>
 			<View style={styles(colorScheme).header}>
 				<TouchableOpacity
-					onPress={() => router.back()}
+					onPress={handleBack}
 					style={styles(colorScheme).backButton}
 				>
 					<ArrowLeft size={24} color={Colors[colorScheme].text} />

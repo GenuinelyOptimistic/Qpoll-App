@@ -35,6 +35,10 @@ export default function RootLayout() {
 							options={{ headerShown: false }}
 						/>
 						<Stack.Screen
+							name="menu"
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
 							name="interest"
 							options={{ headerShown: false }}
 						/>

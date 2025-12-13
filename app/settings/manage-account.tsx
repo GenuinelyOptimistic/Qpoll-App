@@ -23,7 +23,7 @@ export default function ManageAccount() {
 		>
 			<View style={styles(colorScheme).header}>
 				<TouchableOpacity
-					onPress={() => router.back()}
+					onPress={handleBack}
 					style={styles(colorScheme).backButton}
 				>
 					<ArrowLeft size={24} color={Colors[colorScheme].text} />

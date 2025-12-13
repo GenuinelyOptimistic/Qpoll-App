@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo } from "react";
+import React, { useState, useRef, useMemo, useEffect } from "react";
 import {
 	StyleSheet,
 	Text,
@@ -26,7 +26,6 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import { Colors } from "@/constants/theme";
 import { mockPolls, Poll, PollOption } from "../mocks/polls";
 import { useCategories } from "../context/CategoryContext";
-import { NavigationMenu } from "@/components/NavigationMenu";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 const SWIPE_THRESHOLD = SCREEN_WIDTH * 0.25;
@@ -38,7 +37,7 @@ export default function PollScreen() {
 	const [currentIndex, setCurrentIndex] = useState<number>(0);
 	const [allPolls, setAllPolls] = useState<Poll[]>(mockPolls);
 	const [menuVisible, setMenuVisible] = useState<boolean>(false);
-	const [navMenuVisible, setNavMenuVisible] = useState<boolean>(false);
+
 	const position = useRef(new Animated.ValueXY()).current;
 	const rotateValue = useRef(new Animated.Value(0)).current;
 	const menuAnimation = useRef(new Animated.Value(0)).current;
@@ -261,7 +260,7 @@ export default function PollScreen() {
 
 	const toggleNavMenu = () => {
 		Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-		setNavMenuVisible(!navMenuVisible);
+		router.push("/menu");
 	};
 
 	if (!isLoaded) {
@@ -520,12 +519,6 @@ export default function PollScreen() {
 					</View>
 				</TouchableOpacity>
 			)}
-
-			<NavigationMenu
-				navMenuVisible={navMenuVisible}
-				setNavMenuVisible={setNavMenuVisible}
-				colorScheme={colorScheme}
-			/>
 		</View>
 	);
 }
