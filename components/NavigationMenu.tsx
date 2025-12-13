@@ -28,6 +28,7 @@ import {
 	Receipt,
 	LogOut,
 } from "lucide-react-native";
+import { useRouter } from "expo-router";
 import { Colors } from "@/constants/theme";
 
 interface NavigationMenuProps {
@@ -42,6 +43,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 	colorScheme,
 }) => {
 	const insets = useSafeAreaInsets();
+	const router = useRouter();
 
 	if (!navMenuVisible) return null;
 
@@ -83,6 +85,10 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 						<TouchableOpacity
 							style={styles(colorScheme).navMenuItem}
 							activeOpacity={0.7}
+							onPress={() => {
+								setNavMenuVisible(false);
+								router.push("/settings/following");
+							}}
 						>
 							<View style={styles(colorScheme).navMenuItemLeft}>
 								<UserCheck
@@ -104,6 +110,10 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 						<TouchableOpacity
 							style={styles(colorScheme).navMenuItem}
 							activeOpacity={0.7}
+							onPress={() => {
+								setNavMenuVisible(false);
+								router.push("/settings/your-activity");
+							}}
 						>
 							<View style={styles(colorScheme).navMenuItemLeft}>
 								<Activity
@@ -125,6 +135,10 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 						<TouchableOpacity
 							style={styles(colorScheme).navMenuItem}
 							activeOpacity={0.7}
+							onPress={() => {
+								setNavMenuVisible(false);
+								router.push("/settings/notifications");
+							}}
 						>
 							<View style={styles(colorScheme).navMenuItemLeft}>
 								<Bell
@@ -152,6 +166,10 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 						<TouchableOpacity
 							style={styles(colorScheme).navMenuItem}
 							activeOpacity={0.7}
+							onPress={() => {
+								setNavMenuVisible(false);
+								router.push("/settings/account-privacy");
+							}}
 						>
 							<View style={styles(colorScheme).navMenuItemLeft}>
 								<Lock
@@ -180,6 +198,10 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 						<TouchableOpacity
 							style={styles(colorScheme).navMenuItem}
 							activeOpacity={0.7}
+							onPress={() => {
+								setNavMenuVisible(false);
+								router.push("/settings/closed-groups");
+							}}
 						>
 							<View style={styles(colorScheme).navMenuItemLeft}>
 								<Users
@@ -214,6 +236,10 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 						<TouchableOpacity
 							style={styles(colorScheme).navMenuItem}
 							activeOpacity={0.7}
+							onPress={() => {
+								setNavMenuVisible(false);
+								router.push("/settings/about");
+							}}
 						>
 							<View style={styles(colorScheme).navMenuItemLeft}>
 								<Info
@@ -256,6 +282,10 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 						<TouchableOpacity
 							style={styles(colorScheme).navMenuItem}
 							activeOpacity={0.7}
+							onPress={() => {
+								setNavMenuVisible(false);
+								router.push("/settings/support");
+							}}
 						>
 							<View style={styles(colorScheme).navMenuItemLeft}>
 								<HelpCircle
@@ -328,6 +358,10 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 						<TouchableOpacity
 							style={styles(colorScheme).navMenuItem}
 							activeOpacity={0.7}
+							onPress={() => {
+								setNavMenuVisible(false);
+								router.push("/settings/account-verification");
+							}}
 						>
 							<View style={styles(colorScheme).navMenuItemLeft}>
 								<Shield
@@ -349,6 +383,10 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 						<TouchableOpacity
 							style={styles(colorScheme).navMenuItem}
 							activeOpacity={0.7}
+							onPress={() => {
+								setNavMenuVisible(false);
+								router.push("/settings/subscriptions");
+							}}
 						>
 							<View style={styles(colorScheme).navMenuItemLeft}>
 								<CreditCard
@@ -375,6 +413,10 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 						<TouchableOpacity
 							style={styles(colorScheme).navMenuItem}
 							activeOpacity={0.7}
+							onPress={() => {
+								setNavMenuVisible(false);
+								router.push("/settings/manage-account");
+							}}
 						>
 							<View style={styles(colorScheme).navMenuItemLeft}>
 								<User
@@ -395,6 +437,10 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 						<TouchableOpacity
 							style={styles(colorScheme).navMenuItem}
 							activeOpacity={0.7}
+							onPress={() => {
+								setNavMenuVisible(false);
+								router.push("/settings/logout");
+							}}
 						>
 							<View style={styles(colorScheme).navMenuItemLeft}>
 								<LogOut size={20} color="red" />

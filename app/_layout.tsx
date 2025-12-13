@@ -74,6 +74,50 @@ export default function RootLayout() {
 							name="welcome"
 							options={{ headerShown: false }}
 						/>
+						<Stack.Screen
+							name="settings/following"
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name="settings/your-activity"
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name="settings/notifications"
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name="settings/account-privacy"
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name="settings/closed-groups"
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name="settings/about"
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name="settings/support"
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name="settings/account-verification"
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name="settings/subscriptions"
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name="settings/manage-account"
+							options={{ headerShown: false }}
+						/>
+						<Stack.Screen
+							name="settings/logout"
+							options={{ headerShown: false }}
+						/>
 					</Stack>
 					<StatusBar style="auto" />
 				</AuthContextProvider>
