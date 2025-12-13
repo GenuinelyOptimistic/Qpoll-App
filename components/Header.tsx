@@ -3,19 +3,21 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { ArrowLeft } from "lucide-react-native";
 import { Colors } from "@/constants/theme";
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import { router } from "expo-router";
 
 interface HeaderProps {
 	title: string;
-	onBack: () => void;
+	onBack?: () => void;
 }
 
 export default function Header({ title, onBack }: HeaderProps) {
 	const colorScheme = useColorScheme() ?? "light";
+	const handleBack = onBack || (() => router.back());
 
 	return (
 		<View style={styles(colorScheme).header}>
 			<TouchableOpacity
-				onPress={onBack}
+				onPress={handleBack}
 				style={styles(colorScheme).backButton}
 			>
 				<ArrowLeft size={24} color={Colors[colorScheme].text} />

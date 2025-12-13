@@ -8,18 +8,13 @@ import Header from "@/components/Header";
 
 export default function YourActivity() {
 	const insets = useSafeAreaInsets();
-	const router = useRouter();
 	const colorScheme = useColorScheme() ?? "light";
-
-	const handleBack = () => {
-		router.back();
-	};
 
 	return (
 		<View
 			style={[styles(colorScheme).container, { paddingTop: insets.top }]}
 		>
-			<Header title="Your Activity" onBack={handleBack} />
+			<Header title="Your Activity" />
 
 			<ScrollView style={styles(colorScheme).content}>
 				<Text style={styles(colorScheme).contentText}>

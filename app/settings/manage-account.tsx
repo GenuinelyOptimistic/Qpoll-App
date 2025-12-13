@@ -1,25 +1,19 @@
 import React from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { Colors } from "@/constants/theme";
 import Header from "@/components/Header";
 
 export default function ManageAccount() {
 	const insets = useSafeAreaInsets();
-	const router = useRouter();
 	const colorScheme = useColorScheme() ?? "light";
-
-	const handleBack = () => {
-		router.back();
-	};
 
 	return (
 		<View
 			style={[styles(colorScheme).container, { paddingTop: insets.top }]}
 		>
-			<Header title="Manage Account" onBack={handleBack} />
+			<Header title="Manage Account" />
 
 			<ScrollView style={styles(colorScheme).content}>
 				<Text style={styles(colorScheme).contentText}>

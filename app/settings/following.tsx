@@ -8,18 +8,13 @@ import Header from "@/components/Header";
 
 export default function Following() {
 	const insets = useSafeAreaInsets();
-	const router = useRouter();
 	const colorScheme = useColorScheme() ?? "light";
-
-	const handleBack = () => {
-		router.back();
-	};
 
 	return (
 		<View
 			style={[styles(colorScheme).container, { paddingTop: insets.top }]}
 		>
-			<Header title="Following" onBack={handleBack} />
+			<Header title="Following" />
 
 			<ScrollView style={styles(colorScheme).content}>
 				<Text style={styles(colorScheme).contentText}>

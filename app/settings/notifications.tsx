@@ -8,18 +8,13 @@ import Header from "@/components/Header";
 
 export default function Notifications() {
 	const insets = useSafeAreaInsets();
-	const router = useRouter();
 	const colorScheme = useColorScheme() ?? "light";
-
-	const handleBack = () => {
-		router.back();
-	};
 
 	return (
 		<View
 			style={[styles(colorScheme).container, { paddingTop: insets.top }]}
 		>
-			<Header title="Notifications" onBack={handleBack} />
+			<Header title="Notifications" />
 
 			<ScrollView style={styles(colorScheme).content}>
 				<Text style={styles(colorScheme).contentText}>
