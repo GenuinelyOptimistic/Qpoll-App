@@ -8,11 +8,11 @@ import {
 	Alert,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ArrowLeft } from "lucide-react-native";
-import { Colors } from "@/constants/theme";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/app/context/auth";
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import { Colors } from "@/constants/theme";
+import Header from "@/components/Header";
 
 export default function Logout() {
 	const insets = useSafeAreaInsets();
@@ -20,6 +20,10 @@ export default function Logout() {
 	const { logout } = useAuth();
 	const [isLoggingOut, setIsLoggingOut] = useState(false);
 	const colorScheme = useColorScheme() ?? "light";
+
+	const handleBack = () => {
+		router.back();
+	};
 
 	const handleLogout = async () => {
 		Alert.alert(
@@ -58,16 +62,7 @@ export default function Logout() {
 		<View
 			style={[styles(colorScheme).container, { paddingTop: insets.top }]}
 		>
-			<View style={styles(colorScheme).header}>
-				<TouchableOpacity
-					onPress={() => router.back()}
-					style={styles(colorScheme).backButton}
-				>
-					<ArrowLeft size={24} color={Colors[colorScheme].text} />
-				</TouchableOpacity>
-				<Text style={styles(colorScheme).title}>Log Out</Text>
-				<View style={{ width: 40 }} />
-			</View>
+			<Header title="Log Out" onBack={handleBack} />
 
 			<ScrollView style={styles(colorScheme).content}>
 				<Text style={styles(colorScheme).contentText}>
@@ -107,26 +102,6 @@ const styles = (colorScheme: "light" | "dark") =>
 		container: {
 			flex: 1,
 			backgroundColor: colorScheme === "dark" ? "#151718" : "#ffffff",
-		},
-		header: {
-			flexDirection: "row",
-			alignItems: "center",
-			justifyContent: "space-between",
-			paddingHorizontal: 16,
-			paddingVertical: 16,
-			borderBottomWidth: 1,
-			borderBottomColor: colorScheme === "dark" ? "#2a2a2a" : "#e0e0e0",
-		},
-		backButton: {
-			width: 40,
-			height: 40,
-			alignItems: "center",
-			justifyContent: "center",
-		},
-		title: {
-			fontSize: 18,
-			fontWeight: "600",
-			color: Colors[colorScheme].text,
 		},
 		content: {
 			flex: 1,
