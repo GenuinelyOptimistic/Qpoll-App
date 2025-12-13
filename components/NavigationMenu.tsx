@@ -10,7 +10,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
 	ArrowLeft,
 	ChevronRight,
-	Heart,
 	Activity,
 	Bell,
 	UserCheck,
@@ -20,12 +19,9 @@ import {
 	FileText,
 	Globe,
 	HelpCircle,
-	Trash2,
 	Shield,
 	User,
-	Plus,
 	CreditCard,
-	Receipt,
 	LogOut,
 } from "lucide-react-native";
 import { useRouter } from "expo-router";
@@ -62,7 +58,7 @@ export const NavigationMenu: React.FC<NavigationMenuProps> = ({
 			>
 				<View style={styles(colorScheme).navMenuHeader}>
 					<TouchableOpacity
-						onPress={() => setNavMenuVisible(false)}
+						onPress={() => router.back()}
 						style={styles(colorScheme).navMenuClose}
 					>
 						<ArrowLeft size={24} color={Colors[colorScheme].text} />
